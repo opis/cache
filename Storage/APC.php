@@ -1,11 +1,13 @@
 <?php
 
-namespace Opis\Cache;
+namespace Opis\Cache\Storage;
 
 use RuntimeException;
+use Opis\Cache\AbstractStorage;
 
-class APCStorage extends AbstractStorage {
-
+class APC extends AbstractStorage
+{
+	
 	/**
 	 * Constructor.
 	 *
@@ -16,6 +18,7 @@ class APCStorage extends AbstractStorage {
 	public function __construct($identifier)
 	{
 		parent::__construct($identifier);
+		
 		if(function_exists('apc_fetch') === false)
 		{
 			throw new RuntimeException(vsprintf("%s(): APC is not available.", array(__METHOD__)));

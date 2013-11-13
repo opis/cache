@@ -20,26 +20,51 @@
 
 namespace Opis\Cache\Storage;
 
+use \Memcache as PHP_Memcache;
 use RuntimeException;
 use Opis\Cache\AbstractStorage;
 
-class APCU extends AbstractStorage
+class Memcache extends AbstractStorage
 {
+
+	/** @var	\Memcache	Memcache object. */
+	protected $memcache;
+
+	/** @var	int	Compression level. */
+	protected $compression = 0;
 
 	/**
 	 * Constructor.
 	 *
 	 * @access  public
-	 * @param   string   $identifier  Cache identifier
+	 * @param   string	$identifier	Cache identifier
+	 * @param	\Memcache	$memcache	Memcache instance
+	 * @param	boolean	$compress	Compress data
 	 */
 
-	public function __construct($identifier)
+	public function __construct($identifier, PHP_Memcache $memcache, $compress = true)
 	{
 		parent::__construct($identifier);
-		
-		if(function_exists('apcu_fetch') === false)
+
+		$this->memcache = $memcache;
+
+		if($compress !== false)
 		{
-			throw new RuntimeException(vsprintf("%s(): APCU is not available.", array(__METHOD__)));
+			$this->compression = MEMCACHE_COMPRESSED;
+		}
+	}
+
+	/**
+	 * Destructor.
+	 *
+	 * @access  public
+	 */
+
+	public function __destruct()
+	{
+		if($this->memcache !== null)
+		{
+			$this->memcache->close();
 		}
 	}
 
@@ -56,7 +81,17 @@ class APCU extends AbstractStorage
 
 	public function write($key, $value, $ttl = 0)
 	{
-		return apcu_store($this->identifier . $key, $value, $ttl);
+		if($ttl !== 0)
+		{
+			$ttl += time();
+		}
+		
+		if($this->memcache->replace($this->identifier . $key, $value, $this->compression, $ttl) === false)
+		{
+			return $this->memcache->set($this->identifier . $key, $value, $this->compression, $ttl);
+		}
+		
+		return true;
 	}
 
 	/**
@@ -69,7 +104,7 @@ class APCU extends AbstractStorage
 
 	public function read($key)
 	{
-		return apcu_fetch($this->identifier . $key);
+		return $this->memcache->get($this->identifier . $key);
 	}
 
 	/**
@@ -82,7 +117,7 @@ class APCU extends AbstractStorage
 
 	public function has($key)
 	{
-		return apcu_exists($this->identifier . $key);
+		return ($this->memcache->get($this->identifier . $key) !== false);
 	}
 
 	/**
@@ -95,7 +130,7 @@ class APCU extends AbstractStorage
 
 	public function delete($key)
 	{
-		return apcu_delete($this->identifier . $key);
+		return $this->memcache->delete($this->identifier . $key, 0);
 	}
 
 	/**
@@ -107,6 +142,6 @@ class APCU extends AbstractStorage
 
 	public function clear()
 	{
-		return apcu_clear_cache();
+		return $this->memcache->flush();
 	}
 }

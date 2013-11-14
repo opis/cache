@@ -1,5 +1,4 @@
 ##Opis Cache##
-==============
 
 ```php
 use \Opis\Cache\Cache;

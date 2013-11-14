@@ -23,39 +23,40 @@ namespace Opis\Cache\Storage;
 use RuntimeException;
 use Opis\Cache\CacheStorage;
 
-class APC extends CacheStorage
+class WinCache extends CacheStorage
 {
-	
+
+
 	/**
 	 * Constructor.
 	 *
-	 * @access	public
-	 * @param	string	$identifier	Identifier
+	 * @access  public
+	 * @param	string	$identifier	Cache identifier
 	 */
-        
+
 	public function __construct($identifier)
 	{
 		parent::__construct($identifier);
 		
-		if(function_exists('apc_fetch') === false)
+		if(function_exists('wincache_ucache_get') === false)
 		{
-			throw new RuntimeException(vsprintf("%s(): APC is not available.", array(__METHOD__)));
+			throw new RuntimeException(vsprintf("%s(): WinCache is not available.", array(__METHOD__)));
 		}
 	}
-        
+
 	/**
 	 * Store variable in the cache.
 	 *
 	 * @access  public
 	 * @param   string   $key    Cache key
-	 * @param   mixed    $value  The variable to store
+	 * @param   mixed    $valur  The variable to store
 	 * @param   int      $ttl    (optional) Time to live
 	 * @return  boolean
 	 */
 
 	public function write($key, $value, $ttl = 0)
 	{
-	    return apc_store($this->identifier . $key, $value, $ttl);
+		return wincache_ucache_set($this->identifier . $key, $value, $ttl);
 	}
 
 	/**
@@ -68,9 +69,18 @@ class APC extends CacheStorage
 
 	public function read($key)
 	{
-	    return apc_fetch($this->identifier . $key);
+		$cache = wincache_ucache_get($this->identifier . $key, $success);
+		
+		if($success === true)
+		{
+			return $cache;
+		}
+		else
+		{
+			return false;
+		}
 	}
-        
+
 	/**
 	 * Returns TRUE if the cache key exists and FALSE if not.
 	 * 
@@ -81,9 +91,8 @@ class APC extends CacheStorage
 
 	public function has($key)
 	{
-	    return apc_exists($this->identifier . $key);
+		return wincache_ucache_exists($this->identifier . $key);
 	}
-        
 
 	/**
 	 * Delete a variable from the cache.
@@ -92,21 +101,21 @@ class APC extends CacheStorage
 	 * @param   string   $key  Cache key
 	 * @return  boolean
 	 */
-        
+
 	public function delete($key)
 	{
-	    return apc_delete($this->identifier . $key);
+		return wincache_ucache_delete($this->identifier . $key);
 	}
-        
+
 	/**
 	 * Clears the user cache.
 	 *
 	 * @access  public
 	 * @return  boolean
 	 */
-        
+
 	public function clear()
 	{
-	    return apc_clear_cache('user');
+		return wincache_ucache_clear();
 	}
 }

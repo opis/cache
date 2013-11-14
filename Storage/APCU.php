@@ -21,9 +21,9 @@
 namespace Opis\Cache\Storage;
 
 use RuntimeException;
-use Opis\Cache\AbstractStorage;
+use Opis\Cache\CacheStorage;
 
-class APCU extends AbstractStorage
+class APCU extends CacheStorage
 {
 
 	/**

@@ -20,29 +20,15 @@
 
 namespace Opis\Cache\Storage;
 
-use RuntimeException;
-use Opis\Cache\CacheStorage;
+use Opis\Cache\CacheStorageInterface;
 
-class APC extends CacheStorage
+class Memory implements CacheStorageInterface
 {
-	
-	/**
-	 * Constructor.
-	 *
-	 * @access	public
-	 * @param	string	$identifier	Identifier
-	 */
-        
-	public function __construct($identifier)
-	{
-		parent::__construct($identifier);
-		
-		if(function_exists('apc_fetch') === false)
-		{
-			throw new RuntimeException(vsprintf("%s(): APC is not available.", array(__METHOD__)));
-		}
-	}
-        
+
+	/** @var    array   Cached data. */
+	protected $cache = array();
+
+
 	/**
 	 * Store variable in the cache.
 	 *
@@ -55,7 +41,11 @@ class APC extends CacheStorage
 
 	public function write($key, $value, $ttl = 0)
 	{
-	    return apc_store($this->identifier . $key, $value, $ttl);
+		$ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
+
+		$this->cache[$key] = array('data' => $value, 'ttl' => $ttl);
+		
+		return true;
 	}
 
 	/**
@@ -68,9 +58,25 @@ class APC extends CacheStorage
 
 	public function read($key)
 	{
-	    return apc_fetch($this->identifier . $key);
+		if(isset($this->cache[$key]))
+		{
+			if($this->cache[$key]['ttl'] > time())
+			{
+				return $this->cache[$key]['data'];
+			}
+			else
+			{
+				$this->delete($key);
+
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
-        
+
 	/**
 	 * Returns TRUE if the cache key exists and FALSE if not.
 	 * 
@@ -81,9 +87,9 @@ class APC extends CacheStorage
 
 	public function has($key)
 	{
-	    return apc_exists($this->identifier . $key);
+		return (isset($this->cache[$key]) && $this->cache[$key]['ttl'] > time());
 	}
-        
+
 
 	/**
 	 * Delete a variable from the cache.
@@ -92,21 +98,32 @@ class APC extends CacheStorage
 	 * @param   string   $key  Cache key
 	 * @return  boolean
 	 */
-        
+
 	public function delete($key)
 	{
-	    return apc_delete($this->identifier . $key);
+		if(isset($this->cache[$key]))
+		{
+			unset($this->cache[$key]);
+			
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
-        
+
 	/**
 	 * Clears the user cache.
 	 *
 	 * @access  public
 	 * @return  boolean
 	 */
-        
+
 	public function clear()
 	{
-	    return apc_clear_cache('user');
+		$this->cache = array();
+		
+		return true;
 	}
 }

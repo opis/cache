@@ -27,7 +27,7 @@ class Cache
     
     protected $storage;
     
-    public function __construct(StorageInterface $storage)
+    public function __construct(CacheStorageInterface $storage)
     {
         $this->storage = $storage;
     }

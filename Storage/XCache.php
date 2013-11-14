@@ -23,26 +23,50 @@ namespace Opis\Cache\Storage;
 use RuntimeException;
 use Opis\Cache\CacheStorage;
 
-class APC extends CacheStorage
+class XCache extends CacheStorage
 {
+
 	
+	/**
+	 * XCache username.
+	 *
+	 * @var string
+	 */
+
+	protected $username;
+	
+	/**
+	 * XCache password.
+	 *
+	 * @var string
+	 */
+	
+	protected $password;
+
+
 	/**
 	 * Constructor.
 	 *
-	 * @access	public
-	 * @param	string	$identifier	Identifier
+	 * @access  public
+	 * @param   string  $identifier Cache identifier
+	 * @param   string  $username   Username
+	 * @param   string  $password   Password
 	 */
-        
-	public function __construct($identifier)
+
+	public function __construct($identifier, $username, $password)
 	{
 		parent::__construct($identifier);
 		
-		if(function_exists('apc_fetch') === false)
+		$this->username = $username;
+		
+		$this->password = $password;
+		
+		if(function_exists('xcache_get') === false)
 		{
-			throw new RuntimeException(vsprintf("%s(): APC is not available.", array(__METHOD__)));
+			throw new RuntimeException(vsprintf("%s(): XCache is not available.", array(__METHOD__)));
 		}
 	}
-        
+
 	/**
 	 * Store variable in the cache.
 	 *
@@ -55,7 +79,7 @@ class APC extends CacheStorage
 
 	public function write($key, $value, $ttl = 0)
 	{
-	    return apc_store($this->identifier . $key, $value, $ttl);
+		return xcache_set($this->identifier . $key, serialize($value), $ttl);
 	}
 
 	/**
@@ -68,9 +92,9 @@ class APC extends CacheStorage
 
 	public function read($key)
 	{
-	    return apc_fetch($this->identifier . $key);
+		return unserialize(xcache_get($this->identifier . $key));
 	}
-        
+
 	/**
 	 * Returns TRUE if the cache key exists and FALSE if not.
 	 * 
@@ -81,9 +105,9 @@ class APC extends CacheStorage
 
 	public function has($key)
 	{
-	    return apc_exists($this->identifier . $key);
+		return xcache_isset($this->identifier . $key);
 	}
-        
+
 
 	/**
 	 * Delete a variable from the cache.
@@ -92,21 +116,66 @@ class APC extends CacheStorage
 	 * @param   string   $key  Cache key
 	 * @return  boolean
 	 */
-        
+
 	public function delete($key)
 	{
-	    return apc_delete($this->identifier . $key);
+		return xcache_unset($this->identifier . $key);
 	}
-        
+
 	/**
 	 * Clears the user cache.
 	 *
 	 * @access  public
 	 * @return  boolean
 	 */
-        
+
 	public function clear()
 	{
-	    return apc_clear_cache('user');
+		$cleared = true;
+
+		// Set XCache password
+
+		$tempUsername = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : false;
+		$tempPassword = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : false;
+
+		$_SERVER['PHP_AUTH_USER'] = $this->username;
+		$_SERVER['PHP_AUTH_PW']   = $this->password;
+
+		// Clear Cache
+
+		$cacheCount = xcache_count(XC_TYPE_VAR);
+
+		for($i = 0; $i < $cacheCount; $i++)
+		{
+			if(@xcache_clear_cache(XC_TYPE_VAR, $i) === false)
+			{
+				$cleared = false;
+				break;
+			}
+		}
+
+		// Reset PHP_AUTH username/password
+
+		if($tempUsername !== false)
+		{
+			$_SERVER['PHP_AUTH_USER'] = $tempUsername;
+		}
+		else
+		{
+			unset($_SERVER['PHP_AUTH_USER']);
+		}
+
+		if($tempPassword !== false)
+		{
+			$_SERVER['PHP_AUTH_PW'] = $tempPassword;
+		}
+		else
+		{
+			unset($_SERVER['PHP_AUTH_PW']);
+		}
+
+		// Return result
+
+		return $cleared;
 	}
 }

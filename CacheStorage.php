@@ -20,17 +20,32 @@
 
 namespace Opis\Cache;
 
-interface StorageInterface
+abstract class CacheStorage implements CacheStorageInterface
 {
-  
-  function read($key);
-  
-  function write($key, $value, $ttl = 0);
-  
-  function delete($key);
-  
-  function has($key);
-  
-  function clear();
-  
+
+    /** @var    string  Cache identifier. */
+    protected $identifier;
+
+    /**
+     * Constructor.
+     * 
+     * @access  public
+     * @param   string  $identifier Cache identifier
+     */
+    
+    public function __construct($identifier)
+    {
+        $this->identifier = md5($identifier);
+    }
+
+    abstract public function write($key, $value, $ttl = 0);
+
+    abstract public function read($key);
+
+    abstract public function has($key);
+
+    abstract public function delete($key);
+
+    abstract public function clear();
+
 }

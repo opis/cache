@@ -21,17 +21,12 @@
 namespace Opis\Cache\Storage;
 
 use RuntimeException;
-use Opis\Cache\AbstractStorage;
+use Opis\Cache\CacheStorage;
 
-class FileStorage extends AbstractStorage
+class FileStorage extends CacheStorage
 {
 
-	/**
-	 * Cache path.
-	 *
-	 * @var string
-	 */
-
+	/** @var	string	Cache path. */
 	protected $path;
 
 	/**

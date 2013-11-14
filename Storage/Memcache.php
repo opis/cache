@@ -22,9 +22,9 @@ namespace Opis\Cache\Storage;
 
 use \Memcache as PHP_Memcache;
 use RuntimeException;
-use Opis\Cache\AbstractStorage;
+use Opis\Cache\CacheStorage;
 
-class Memcache extends AbstractStorage
+class Memcache extends CacheStorage
 {
 
 	/** @var	\Memcache	Memcache object. */
@@ -37,9 +37,9 @@ class Memcache extends AbstractStorage
 	 * Constructor.
 	 *
 	 * @access  public
-	 * @param   string	$identifier	Cache identifier
+	 * @param   string		$identifier	Cache identifier
 	 * @param	\Memcache	$memcache	Memcache instance
-	 * @param	boolean	$compress	Compress data
+	 * @param	boolean		$compress	Compress data
 	 */
 
 	public function __construct($identifier, PHP_Memcache $memcache, $compress = true)

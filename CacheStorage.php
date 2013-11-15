@@ -20,11 +20,19 @@
 
 namespace Opis\Cache;
 
+use Closure;
+
 abstract class CacheStorage implements CacheStorageInterface
 {
 
     /** @var    string  Cache identifier. */
     protected $identifier;
+    
+    protected static $storages = array();
+    
+    protected static $defaultStorage = null;
+    
+    protected static $instances = array();
 
     /**
      * Constructor.
@@ -36,6 +44,40 @@ abstract class CacheStorage implements CacheStorageInterface
     public function __construct($identifier)
     {
         $this->identifier = md5($identifier);
+    }
+    
+    public static function register($name, Closure $closure, $default = false)
+    {
+        self::$storages[$name] = $closure;
+        if($default)
+        {
+            self::$defaultStorage = $name;
+        }
+    }
+    
+    public static function getDefaultStorage()
+    {
+        if(self::$defaultStorage == null)
+        {
+            if(!empty(self::$storages))
+            {
+                self::$defaultStorage = reset(array_keys(self::$storages));
+            }
+        }
+        return self::$defaultStorage;
+    }
+    
+    public static function build($name = null)
+    {
+        if($name == null)
+        {
+            $name = self::getDefaultStorage();
+        }
+        if(!isset(self::$instances[$name]))
+        {
+            self::$instances[$name] = self::$storages[$name]();
+        }
+        return self::$instances[$name];
     }
 
     abstract public function write($key, $value, $ttl = 0);

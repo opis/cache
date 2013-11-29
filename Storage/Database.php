@@ -28,21 +28,15 @@ use Opis\Database\Database as DB;
 class Database extends CacheStorage
 {
     
-    protected $connection;
+    protected $database;
     
     protected $table;
     
-    public function __construct($identifier, $connection, $table)
+    public function __construct($identifier, DB $database, $table)
     {
         parent::__construct($identifier);
-        $this->connection = $connection;
+        $this->database = $database;
         $this->table = $table;
-    }
-    
-    
-    protected function table()
-    {
-        return DB::connection($this->connection)->table($this->table);
     }
     
     /**
@@ -62,7 +56,10 @@ class Database extends CacheStorage
 		try
 		{
 			$this->delete($key);
-			return $this->table()->insert(array('key' => $this->identifier . $key, 'data' => serialize($value), 'lifetime' => $ttl));
+			return $this->database
+						->insert($this->table, array('key', 'data', 'lifetime'))
+						->values(array($this->identifier . $key, serialize($value), $ttl))
+						->execute();
 		}
 		catch(PDOException $e)
 		{
@@ -82,8 +79,11 @@ class Database extends CacheStorage
 	{
 		try
 		{
-			$cache = $this->table()->where('key', '=', $this->identifier . $key)->first();
-
+			$cache = $this->database
+						->select($this->table)
+						->where('key', $this->identifier)
+						->execute(true);
+						
 			if($cache !== false)
 			{
 				if(time() < $cache->lifetime)
@@ -120,7 +120,12 @@ class Database extends CacheStorage
 	{
 		try
 		{
-			return (bool) $this->table()->where('key', '=', $this->identifier . $key)->where('lifetime', '>', time())->count();
+			return (bool) $this->database
+								->select($this->table)
+								->count()
+								->where('key', $this->identifier . $key)
+								->where('lifetime', time(), '>')
+								->execute();
 		}
 		catch(PDOException $e)
 		{
@@ -140,7 +145,10 @@ class Database extends CacheStorage
 	{
 		try
 		{
-			return (bool) $this->table()->where('key', '=', $this->identifier . $key)->delete();
+			return (bool) $this->database
+								->delete($this->table)
+								->where('key', $this->identifier . $key)
+								->execute();
 		}
 		catch(PDOException $e)
 		{
@@ -159,7 +167,7 @@ class Database extends CacheStorage
 	{
 		try
 		{
-			$this->table()->delete();
+			$this->database->delete($this->table)->execute();
             
 			return true;
 		}

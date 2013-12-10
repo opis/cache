@@ -20,7 +20,7 @@
 
 namespace Opis\Cache;
 
-interface CacheStorageInterface
+interface StorageInterface
 {
   
   function read($key);

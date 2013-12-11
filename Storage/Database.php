@@ -84,7 +84,7 @@ class Database implements StorageInterface
 	{
 		try
 		{
-			$cache = $this->database->form($this->table)->where('key', $this->prefix . $key)->select();
+			$cache = $this->database->form($this->table)->where('key', $this->prefix . $key)->select()->first();
 						
 			if($cache !== false)
 			{

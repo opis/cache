@@ -21,13 +21,17 @@
 namespace Opis\Cache\Storage;
 
 use RuntimeException;
-use Opis\Cache\CacheStorage;
+use Opis\Cache\StorageInterface;
 
-class FileStorage extends CacheStorage
+class FileStorage implements StorageInterface
 {
 
 	/** @var	string	Cache path. */
 	protected $path;
+	
+	protected $prefix;
+	
+	protected $extension;
 
 	/**
 	 * Constructor.
@@ -37,11 +41,12 @@ class FileStorage extends CacheStorage
 	 * @param	string	$path	Path
 	 */
 
-	public function __construct($identifier, $path)
+	public function __construct($path, $prefix = '', $extension = '.cache')
 	{
-		parent::__construct($identifier);
 		
 		$this->path = trim($path, '/');
+		$this->prefix = $prefix;
+		$this->extension = $extension;
 		
 		if(file_exists($this->path) === false || is_readable($this->path) === false || is_writable($this->path) === false)
 		{
@@ -60,7 +65,7 @@ class FileStorage extends CacheStorage
 
 	protected function cacheFile($key)
 	{
-		return $this->path . '/' . $this->identifier . $key . '.cache';
+		return $this->path . '/' . $this->prefix . $key . $this->extension;
 	}
 
 	/**
@@ -76,9 +81,9 @@ class FileStorage extends CacheStorage
 	public function write($key, $value, $ttl = 0)
 	{
 		$ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
-
+		
 		$data = "{$ttl}\n" . serialize($value);
-
+		
 		return is_int(file_put_contents($this->cacheFile($key), $data, LOCK_EX));
 	}
 

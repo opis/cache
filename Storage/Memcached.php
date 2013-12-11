@@ -21,9 +21,10 @@
 namespace Opis\Cache\Storage;
 
 use RuntimeException;
-use Opis\Cache\CacheStorage;
+use \Memcached as PHP_Memcached;
+use Opis\Cache\StorageInterface;
 
-class Memcached extends CacheStorage
+class Memcached implements StorageInterface
 {
 	/**
 	 * Memcached object.
@@ -32,22 +33,23 @@ class Memcached extends CacheStorage
 	 */
 
 	protected $memcached;
+	
+	protected $prefix;
 
 	/**
 	 * Constructor.
 	 *
 	 * @access  public
-	 * @param   string		$identifier	Cache identifier
 	 * @param	\Memcahed	$memcached 	Memcached instance
 	 * @param	boolean		$compress	(optional) Compress
 	 * @param	int			$timeout	(optional) Timeout seconds
 	 */
 
-	public function __construct($identifier, \Memcached $memcached, $compress = true, $timeout = 1)
+	public function __construct(PHP_Memcached $memcached, $prefix = '', $compress = true, $timeout = 1)
 	{
-		parent::__construct($identifier);
 		
 		$this->memcached = $memcached;
+		$this->prefix = $prefix;
 		
 		if($timeout !== 1)
 		{
@@ -92,9 +94,9 @@ class Memcached extends CacheStorage
 			$ttl += time();
 		}
 
-		if($this->memcached->replace($this->identifier . $key, $value, $ttl) === false)
+		if($this->memcached->replace($this->prefix . $key, $value, $ttl) === false)
 		{
-			return $this->memcached->set($this->identifier . $key, $value, $ttl);
+			return $this->memcached->set($this->prefix . $key, $value, $ttl);
 		}
 
 		return true;
@@ -110,7 +112,7 @@ class Memcached extends CacheStorage
 
 	public function read($key)
 	{
-		return $this->memcached->get($this->identifier . $key);
+		return $this->memcached->get($this->prefix . $key);
 	}
 
 	/**
@@ -123,7 +125,7 @@ class Memcached extends CacheStorage
 
 	public function has($key)
 	{
-		return ($this->memcached->get($this->identifier . $key) !== false);
+		return ($this->memcached->get($this->prefix . $key) !== false);
 	}
 
 	/**
@@ -136,7 +138,7 @@ class Memcached extends CacheStorage
 
 	public function delete($key)
 	{
-		return $this->memcached->delete($this->identifier . $key, 0);
+		return $this->memcached->delete($this->prefix . $key, 0);
 	}
 
 	/**

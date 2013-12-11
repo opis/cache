@@ -21,9 +21,9 @@
 namespace Opis\Cache\Storage;
 
 use RuntimeException;
-use Opis\Cache\CacheStorage;
+use Opis\Cache\StorageInterface;
 
-class XCache extends CacheStorage
+class XCache implements StorageInterface
 {
 
 	
@@ -43,7 +43,8 @@ class XCache extends CacheStorage
 	
 	protected $password;
 
-
+	protected $prefix;
+	
 	/**
 	 * Constructor.
 	 *
@@ -53,13 +54,13 @@ class XCache extends CacheStorage
 	 * @param   string  $password   Password
 	 */
 
-	public function __construct($identifier, $username, $password)
+	public function __construct($username, $password, $prefix = '')
 	{
-		parent::__construct($identifier);
-		
 		$this->username = $username;
 		
 		$this->password = $password;
+		
+		$this->prefix = '';
 		
 		if(function_exists('xcache_get') === false)
 		{
@@ -79,7 +80,7 @@ class XCache extends CacheStorage
 
 	public function write($key, $value, $ttl = 0)
 	{
-		return xcache_set($this->identifier . $key, serialize($value), $ttl);
+		return xcache_set($this->prefix . $key, serialize($value), $ttl);
 	}
 
 	/**
@@ -92,7 +93,7 @@ class XCache extends CacheStorage
 
 	public function read($key)
 	{
-		return unserialize(xcache_get($this->identifier . $key));
+		return unserialize(xcache_get($this->prefix . $key));
 	}
 
 	/**
@@ -105,7 +106,7 @@ class XCache extends CacheStorage
 
 	public function has($key)
 	{
-		return xcache_isset($this->identifier . $key);
+		return xcache_isset($this->prefix . $key);
 	}
 
 
@@ -119,7 +120,7 @@ class XCache extends CacheStorage
 
 	public function delete($key)
 	{
-		return xcache_unset($this->identifier . $key);
+		return xcache_unset($this->prefix . $key);
 	}
 
 	/**

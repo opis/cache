@@ -3,11 +3,12 @@
 namespace Opis\Cache\Storage;
 
 use RuntimeException;
-use Opis\Cache\CacheStorage;
+use Opis\Cache\StorageInterface;
 
-class ZendMemory extends CacheStorage
+class ZendMemory implements StorageInterface
 {
-
+	protected $prefix;
+	
 	/**
 	 * Constructor.
 	 *
@@ -15,9 +16,9 @@ class ZendMemory extends CacheStorage
 	 * @param   string  $identifier Cache identifier
 	 */
 
-	public function __construct($identifier)
+	public function __construct($prefix = '')
 	{
-		parent::__construct($identifier);
+		$this->prefix = $prefix;
 		
 		if(function_exists('zend_shm_cache_fetch') === false)
 		{
@@ -38,7 +39,7 @@ class ZendMemory extends CacheStorage
 
 	public function write($key, $value, $ttl = 0)
 	{
-		return zend_shm_cache_store($this->identifier . $key, $value, $ttl);
+		return zend_shm_cache_store($this->prefix . $key, $value, $ttl);
 	}
 
 	/**
@@ -51,7 +52,7 @@ class ZendMemory extends CacheStorage
 
 	public function read($key)
 	{
-		return zend_shm_cache_fetch($this->identifier . $key);
+		return zend_shm_cache_fetch($this->prefix . $key);
 	}
 
 	/**
@@ -64,7 +65,7 @@ class ZendMemory extends CacheStorage
 
 	public function has($key)
 	{
-		return (zend_disk_cache_fetch($this->identifier . $key) !== false);
+		return (zend_disk_cache_fetch($this->prefix . $key) !== false);
 	}
 
 	/**
@@ -77,7 +78,7 @@ class ZendMemory extends CacheStorage
 
 	public function delete($key)
 	{
-		return zend_shm_cache_delete($this->identifier . $key);
+		return zend_shm_cache_delete($this->prefix . $key);
 	}
 
 	/**

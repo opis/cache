@@ -21,11 +21,12 @@
 namespace Opis\Cache\Storage;
 
 use RuntimeException;
-use Opis\Cache\CacheStorage;
+use Opis\Cache\StorageInterface;
 
-class WinCache extends CacheStorage
+class WinCache implements StorageInterface
 {
 
+	protected $prefix;
 
 	/**
 	 * Constructor.
@@ -34,9 +35,9 @@ class WinCache extends CacheStorage
 	 * @param	string	$identifier	Cache identifier
 	 */
 
-	public function __construct($identifier)
+	public function __construct($prefix = '')
 	{
-		parent::__construct($identifier);
+		$this->prefix = $prefix;
 		
 		if(function_exists('wincache_ucache_get') === false)
 		{
@@ -56,7 +57,7 @@ class WinCache extends CacheStorage
 
 	public function write($key, $value, $ttl = 0)
 	{
-		return wincache_ucache_set($this->identifier . $key, $value, $ttl);
+		return wincache_ucache_set($this->prefix . $key, $value, $ttl);
 	}
 
 	/**
@@ -69,7 +70,7 @@ class WinCache extends CacheStorage
 
 	public function read($key)
 	{
-		$cache = wincache_ucache_get($this->identifier . $key, $success);
+		$cache = wincache_ucache_get($this->prefix . $key, $success);
 		
 		if($success === true)
 		{
@@ -91,7 +92,7 @@ class WinCache extends CacheStorage
 
 	public function has($key)
 	{
-		return wincache_ucache_exists($this->identifier . $key);
+		return wincache_ucache_exists($this->prefix . $key);
 	}
 
 	/**
@@ -104,7 +105,7 @@ class WinCache extends CacheStorage
 
 	public function delete($key)
 	{
-		return wincache_ucache_delete($this->identifier . $key);
+		return wincache_ucache_delete($this->prefix . $key);
 	}
 
 	/**

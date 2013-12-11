@@ -21,11 +21,13 @@
 namespace Opis\Cache\Storage;
 
 use RuntimeException;
-use Opis\Cache\CacheStorage;
+use Opis\Cache\StorageInterface;
 
-class APCU extends CacheStorage
+class APCU implements StorageInterface
 {
 
+	protected $prefix;
+	
 	/**
 	 * Constructor.
 	 *
@@ -33,10 +35,8 @@ class APCU extends CacheStorage
 	 * @param   string   $identifier  Cache identifier
 	 */
 
-	public function __construct($identifier)
-	{
-		parent::__construct($identifier);
-		
+	public function __construct($prefix = '')
+	{	
 		if(function_exists('apcu_fetch') === false)
 		{
 			throw new RuntimeException(vsprintf("%s(): APCU is not available.", array(__METHOD__)));
@@ -56,7 +56,7 @@ class APCU extends CacheStorage
 
 	public function write($key, $value, $ttl = 0)
 	{
-		return apcu_store($this->identifier . $key, $value, $ttl);
+		return apcu_store($this->prefix . $key, $value, $ttl);
 	}
 
 	/**
@@ -69,7 +69,7 @@ class APCU extends CacheStorage
 
 	public function read($key)
 	{
-		return apcu_fetch($this->identifier . $key);
+		return apcu_fetch($this->prefix . $key);
 	}
 
 	/**
@@ -82,7 +82,7 @@ class APCU extends CacheStorage
 
 	public function has($key)
 	{
-		return apcu_exists($this->identifier . $key);
+		return apcu_exists($this->prefix . $key);
 	}
 
 	/**
@@ -95,7 +95,7 @@ class APCU extends CacheStorage
 
 	public function delete($key)
 	{
-		return apcu_delete($this->identifier . $key);
+		return apcu_delete($this->prefix . $key);
 	}
 
 	/**

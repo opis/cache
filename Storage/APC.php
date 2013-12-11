@@ -21,10 +21,12 @@
 namespace Opis\Cache\Storage;
 
 use RuntimeException;
-use Opis\Cache\CacheStorage;
+use Opis\Cache\StorageInterface;
 
-class APC extends CacheStorage
+class APC implements StorageInterface
 {
+	
+	protected $prefix;
 	
 	/**
 	 * Constructor.
@@ -33,10 +35,8 @@ class APC extends CacheStorage
 	 * @param	string	$identifier	Identifier
 	 */
         
-	public function __construct($identifier)
-	{
-		parent::__construct($identifier);
-		
+	public function __construct($prefix = '')
+	{	
 		if(function_exists('apc_fetch') === false)
 		{
 			throw new RuntimeException(vsprintf("%s(): APC is not available.", array(__METHOD__)));
@@ -55,7 +55,7 @@ class APC extends CacheStorage
 
 	public function write($key, $value, $ttl = 0)
 	{
-	    return apc_store($this->identifier . $key, $value, $ttl);
+	    return apc_store($this->prefix . $key, $value, $ttl);
 	}
 
 	/**
@@ -68,7 +68,7 @@ class APC extends CacheStorage
 
 	public function read($key)
 	{
-	    return apc_fetch($this->identifier . $key);
+	    return apc_fetch($this->prefix . $key);
 	}
         
 	/**
@@ -81,7 +81,7 @@ class APC extends CacheStorage
 
 	public function has($key)
 	{
-	    return apc_exists($this->identifier . $key);
+	    return apc_exists($this->prefix . $key);
 	}
         
 
@@ -95,7 +95,7 @@ class APC extends CacheStorage
         
 	public function delete($key)
 	{
-	    return apc_delete($this->identifier . $key);
+	    return apc_delete($this->prefix . $key);
 	}
         
 	/**

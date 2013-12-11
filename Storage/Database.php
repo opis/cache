@@ -21,22 +21,26 @@
 namespace Opis\Cache\Storage;
 
 use PDOException;
-use Opis\Cache\CacheStorage;
+use Opis\Cache\StorageInterface;
 use Opis\Database\Database as DB;
 
 
-class Database extends CacheStorage
+class Database implements StorageInterface
 {
     
     protected $database;
     
     protected $table;
+	
+	protected $prefix;
+	
+	protected $columns;
     
-    public function __construct($identifier, DB $database, $table)
+    public function __construct(DB $database, $table, $prefix = '')
     {
-        parent::__construct($identifier);
         $this->database = $database;
         $this->table = $table;
+		$this->prefix = $prefix;
     }
     
     /**
@@ -59,7 +63,7 @@ class Database extends CacheStorage
 			
 			return $this->database
 						->insert($this->table, array('key', 'data', 'lifetime'))
-						->values(array($this->identifier . $key, serialize($value), $ttl))
+						->values(array($this->prefix . $key, serialize($value), $ttl))
 						->execute();
 		}
 		catch(PDOException $e)
@@ -80,7 +84,7 @@ class Database extends CacheStorage
 	{
 		try
 		{
-			$cache = $this->database->form($this->table)->where('key', $this->identifier . $key)->select();
+			$cache = $this->database->form($this->table)->where('key', $this->prefix . $key)->select();
 						
 			if($cache !== false)
 			{
@@ -119,7 +123,7 @@ class Database extends CacheStorage
 		try
 		{
 			return (bool) $this->database->from($this->table)
-										 ->where('key', $this->identifier . $key)
+										 ->where('key', $this->prefix . $key)
 										 ->andWhere('lifetime', time(), '>')
 										 ->count();
 		}
@@ -141,7 +145,7 @@ class Database extends CacheStorage
 	{
 		try
 		{
-			return (bool) $this->database->table($this->table)->where('key', $this->identifier . $key)->delete();
+			return (bool) $this->database->table($this->table)->where('key', $this->prefix . $key)->delete();
 		}
 		catch(PDOException $e)
 		{

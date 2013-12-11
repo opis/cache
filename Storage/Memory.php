@@ -20,9 +20,9 @@
 
 namespace Opis\Cache\Storage;
 
-use Opis\Cache\CacheStorageInterface;
+use Opis\Cache\StorageInterface;
 
-class Memory implements CacheStorageInterface
+class Memory implements StorageInterface
 {
 
 	/** @var    array   Cached data. */

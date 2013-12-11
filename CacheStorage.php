@@ -22,72 +22,47 @@ namespace Opis\Cache;
 
 use Closure;
 
-abstract class CacheStorage implements CacheStorageInterface
-{
-
-    /** @var    string  Cache identifier. */
-    protected $identifier;
-    
+class CacheStorage
+{    
     protected static $storages = array();
     
     protected static $defaultStorage = null;
     
     protected static $instances = array();
 
-    /**
-     * Constructor.
-     * 
-     * @access  public
-     * @param   string  $identifier Cache identifier
-     */
-    
-    public function __construct($identifier)
+    protected function __construct()
     {
-        $this->identifier = md5($identifier);
+        
     }
     
     public static function register($name, Closure $closure, $default = false)
     {
-        self::$storages[$name] = $closure;
-        if($default)
+        static::$storages[$name] = $closure;
+        
+        if($default || empty(static::$storages))
         {
             self::$defaultStorage = $name;
         }
     }
     
-    public static function getDefaultStorage()
+    public static function defaultStorageName()
     {
-        if(self::$defaultStorage == null)
-        {
-            if(!empty(self::$storages))
-            {
-                self::$defaultStorage = reset(array_keys(self::$storages));
-            }
-        }
-        return self::$defaultStorage;
+        return static::$defaultStorage;
     }
     
     public static function build($name = null)
     {
         if($name == null)
         {
-            $name = self::getDefaultStorage();
+            $name = static::$defaultStorage;
         }
-        if(!isset(self::$instances[$name]))
+        
+        if(!isset(static::$instances[$name]))
         {
-            self::$instances[$name] = self::$storages[$name]();
+            static::$instances[$name] = static::$storages[$name]();
         }
-        return self::$instances[$name];
+        
+        return static::$instances[$name];
     }
-
-    abstract public function write($key, $value, $ttl = 0);
-
-    abstract public function read($key);
-
-    abstract public function has($key);
-
-    abstract public function delete($key);
-
-    abstract public function clear();
 
 }

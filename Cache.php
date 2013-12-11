@@ -27,6 +27,8 @@ class Cache
     
     protected $storage;
     
+    protected static $instances = array();
+    
     public function __construct(StorageInterface $storage)
     {
         $this->storage = $storage;
@@ -46,6 +48,19 @@ class Cache
         $value = $closure();
         $this->storage->write($key, $value, $ttl);
         return $value;
+    }
+    
+    public static function get($name = null)
+    {
+        if($name == null)
+        {
+            $name = CacheStorage::defaultStorageName();
+        }
+        if(!isset(static::$instances[$name]))
+        {
+            static::$instances[$name] = new Cache(CacheStorage::build($name));
+        }
+        return static::$instances[$name];
     }
     
 }

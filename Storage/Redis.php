@@ -20,20 +20,22 @@
 
 namespace Opis\Cache\Storage;
 
-use Opis\Cache\CacheStorage;
+use Opis\Cache\StorageInterface;
 use Predis\Client;
 
-class Redis extends CacheStorage
+class Redis implements StorageInterface
 {
     protected $redis;
     
+	protected $prefix;
+	
     /**
      * Constructor
      */
-    public function __construct($identifier, Client $redis)
+    public function __construct(Client $redis, $prefix = '')
     {
-        parent::__construct($identifier);
         $this->redis = $redis;
+		$this->prefix = $prefix;
     }
     
     /**
@@ -57,10 +59,10 @@ class Redis extends CacheStorage
 	
 	public function write($key, $value, $ttl = 0)
 	{
-        $this->redis->set($this->identifier . $key, is_numeric($value) ? $value : serialize($value));
+        $this->redis->set($this->prefix . $key, is_numeric($value) ? $value : serialize($value));
         if($ttl != 0)
         {
-            $this->redis->expire($this->identifier . $key, $ttl);
+            $this->redis->expire($this->prefix . $key, $ttl);
         }
         return true;
 	}
@@ -75,7 +77,7 @@ class Redis extends CacheStorage
 	
 	public function read($key)
 	{
-        $data = $this->redis->get($this->identifier . $key);
+        $data = $this->redis->get($this->prefix . $key);
         return $data === null ? false : (is_numeric($data) ? $data : unserialize($data));
 	}
 
@@ -89,7 +91,7 @@ class Redis extends CacheStorage
 
 	public function has($key)
 	{
-        return (bool) $this->redis->exists($this->identifier . $key);
+        return (bool) $this->redis->exists($this->prefix . $key);
 	}
 	
 	/**
@@ -102,7 +104,7 @@ class Redis extends CacheStorage
 	
 	public function delete($key)
 	{
-        return (bool) $this->redis->exists($this->identifier . $key);
+        return (bool) $this->redis->exists($this->prefix . $key);
 	}
 	
 	/**

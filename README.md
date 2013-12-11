@@ -12,7 +12,7 @@ CacheStorage::register('memory', function(){
 
 //register a storage and mark it as the default cache storage
 CacheStorage::register('file', function(){
-    return new FileStorage('opis', '/path/to/folder');
+    return new FileStorage('/path/to/folder');
 }, true);
 
 $cache = Cache::get('memory');

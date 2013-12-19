@@ -22,12 +22,10 @@ namespace Opis\Cache;
 
 use Closure;
 
-class Cache
+class Cache implements StorageInterface
 {
     
     protected $storage;
-    
-    protected static $instances = array();
     
     public function __construct(StorageInterface $storage)
     {
@@ -39,6 +37,31 @@ class Cache
         return call_user_func_array(array($this->storage, $name), $arguments);
     }
     
+    public function read($key)
+    {
+        return $this->storage->read($key);
+    }
+  
+    public function write($key, $value, $ttl = 0)
+    {
+        return $this->storage->write($key, $value, $ttl);
+    }
+  
+    public function delete($key)
+    {
+        return $this->storage->delete($key);
+    }
+  
+    public function has($key)
+    {
+        return $this->storage->has($key);
+    }
+  
+    public function clear()
+    {
+        return $this->storage->clear();
+    }
+    
     public function load($key, Closure $closure, $ttl = 0)
     {
         if($this->storage->has($key))
@@ -48,19 +71,6 @@ class Cache
         $value = $closure();
         $this->storage->write($key, $value, $ttl);
         return $value;
-    }
-    
-    public static function get($name = null)
-    {
-        if($name == null)
-        {
-            $name = CacheStorage::defaultStorageName();
-        }
-        if(!isset(static::$instances[$name]))
-        {
-            static::$instances[$name] = new Cache(CacheStorage::build($name));
-        }
-        return static::$instances[$name];
     }
     
 }

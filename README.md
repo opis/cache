@@ -1,23 +1,21 @@
-##Opis Cache##
+##Opis Cache Component##
 
 ```php
 use \Opis\Cache\Cache;
-use \Opis\Cache\CacheStorage;
-use \Opis\Cache\Storage\Memory as MemoryStorage;
 use \Opis\Cache\Storage\File as FileStorage;
 
-CacheStorage::register('memory', function(){
-    return new MemoryStorage();
-});
-
-//register a storage and mark it as the default cache storage
-CacheStorage::register('file', function(){
-    return new FileStorage('/path/to/folder');
-}, true);
-
-$cache = Cache::get('memory');
+$cache = new Cache(new FileStorage('/path/to/folder'));
 $cache->write('key', 'value');
 
-//use the defult cache storage
-Cache::get()->write('key', 'value');
+if($cache->has('key'))
+{
+    $value = $cache->read('key');
+}
+
+$cache->delete('key');
+
+$value = $cache->load('key', function(){
+    return array();
+}, 3600);
+
 ```

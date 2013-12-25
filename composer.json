@@ -16,9 +16,8 @@
         "predis/predis": "0.8.*"
     },
     "autoload": {
-        "psr-0": {"Opis\\Cache": ""}
+        "psr-0": {"Opis\\Cache": "lib"}
     },
-    "target-dir": "Opis/Cache",
     "config": {
         "preferred-install": "dist"
     },

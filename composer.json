@@ -16,7 +16,7 @@
         "predis/predis": "0.8.*"
     },
     "autoload": {
-        "psr-0": {"Opis\\Cache": "lib"}
+        "psr-4": {"Opis\\Cache": "lib/"}
     },
     "config": {
         "preferred-install": "dist"

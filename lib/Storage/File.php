@@ -23,7 +23,7 @@ namespace Opis\Cache\Storage;
 use RuntimeException;
 use Opis\Cache\StorageInterface;
 
-class FileStorage implements StorageInterface
+class File implements StorageInterface
 {
 
 	/** @var	string	Cache path. */

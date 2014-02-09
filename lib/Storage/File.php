@@ -44,7 +44,7 @@ class File implements StorageInterface
 	public function __construct($path, $prefix = '', $extension = '.cache')
 	{
 		
-		$this->path = trim($path, '/');
+		$this->path = rtrim($path, '/');
 		$this->prefix = $prefix;
 		$this->extension = $extension;
 		

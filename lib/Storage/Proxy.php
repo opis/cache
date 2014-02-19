@@ -22,20 +22,20 @@ namespace Opis\Cache\Storage;
 
 use Opis\Cache\StorageInterface;
 
-class Memory implements StorageInterface
+class Proxy implements StorageInterface
 {
 
 	/** @var    array   Cached data. */
 	protected $cache = array();
-
-    /** @var    StorageInterface    Proxy. */
-    protected $proxy;
+	
+	/** @var    StorageInterface    Proxy. */
+	protected $proxy;
     
     
-    public function __construct(StorageInterface $proxy)
-    {
-        $this->proxy = $proxy;
-    }
+	public function __construct(StorageInterface $proxy)
+	{
+		$this->proxy = $proxy;
+	}
     
 	/**
 	 * Store variable in the cache.
@@ -72,10 +72,10 @@ class Memory implements StorageInterface
 	{
 		if(!isset($this->cache[$key]))
 		{
-            return $this->cache[$key]  = $this->proxy->read($key);
+			return $this->cache[$key]  = $this->proxy->read($key);
 		}
-        
-        return $this->cache[$key];
+		
+		return $this->cache[$key];
 	}
 
 	/**
@@ -102,13 +102,13 @@ class Memory implements StorageInterface
 
 	public function delete($key)
 	{
-        if($this->proxy->delete($key))
-        {
-            unset($this->cache[$key]);
-            return true;
-        }
-        
-        return false;
+		if($this->proxy->delete($key))
+		{
+			unset($this->cache[$key]);
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -122,8 +122,8 @@ class Memory implements StorageInterface
 	{
         if($this->proxy->clear())
         {
-            $this->cache = array();
-            return true;
+			$this->cache = array();
+			return true;
         }
         return false;
 	}

@@ -26,130 +26,126 @@ use Opis\Cache\StorageInterface;
 
 class Memcached implements StorageInterface
 {
-	/**
-	 * Memcached object.
-	 *
-	 * @var \Memcached
-	 */
 
-	protected $memcached;
-	
-	protected $prefix;
-
-	/**
-	 * Constructor.
-	 *
-	 * @access  public
-	 * @param	\Memcahed	$memcached 	Memcached instance
-	 * @param	boolean		$compress	(optional) Compress
-	 * @param	int			$timeout	(optional) Timeout seconds
-	 */
-
-	public function __construct(PHP_Memcached $memcached, $prefix = '', $compress = true, $timeout = 1)
-	{
-		
-		$this->memcached = $memcached;
-		$this->prefix = $prefix;
-		
-		if($timeout !== 1)
-		{
-			$this->memcached->setOption(PHP_Memcached::OPT_CONNECT_TIMEOUT, ($timeout * 1000));
-		}
-
-		if($compress === false)
-		{
-			$this->memcached->setOption(PHP_Memcached::OPT_COMPRESSION, false);
-		}
-	}
-
-	/**
-	 * Destructor.
-	 *
-	 * @access  public
-	 */
-
-	public function __destruct()
-	{
-		$this->memcached = null;
-	}
-
-	//---------------------------------------------
-	// Class methods
-	//---------------------------------------------
-
-	/**
-	 * Store variable in the cache.
-	 *
-	 * @access  public
-	 * @param   string   $key    Cache key
-	 * @param   mixed    $value  The variable to store
-	 * @param   int      $ttl    (optional) Time to live
-	 * @return  boolean
-	 */
-
-	public function write($key, $value, $ttl = 0)
-	{
-		if($ttl !== 0)
-		{
-			$ttl += time();
-		}
-
-		if($this->memcached->replace($this->prefix . $key, $value, $ttl) === false)
-		{
-			return $this->memcached->set($this->prefix . $key, $value, $ttl);
-		}
-
-		return true;
-	}
-
-	/**
-	 * Fetch variable from the cache.
-	 *
-	 * @access  public
-	 * @param   string  $key  Cache key
-	 * @return  mixed
-	 */
-
-	public function read($key)
-	{
-		return $this->memcached->get($this->prefix . $key);
-	}
-
-	/**
-	 * Returns TRUE if the cache key exists and FALSE if not.
-	 * 
-	 * @access  public
-	 * @param   string   $key  Cache key
-	 * @return  boolean
-	 */
-
-	public function has($key)
-	{
-		return ($this->memcached->get($this->prefix . $key) !== false);
-	}
-
-	/**
-	 * Delete a variable from the cache.
-	 *
-	 * @access  public
-	 * @param   string   $key  Cache key
-	 * @return  boolean
-	 */
-
-	public function delete($key)
-	{
-		return $this->memcached->delete($this->prefix . $key, 0);
-	}
-
-	/**
-	 * Clears the user cache.
-	 *
-	 * @access  public
-	 * @return  boolean
-	 */
-
-	public function clear()
-	{
-		return $this->memcached->flush();
-	}
+    /** @var    \Memcached  Memcached object. */
+    protected $memcached;
+    
+    protected $prefix;
+    
+    /**
+     * Constructor.
+     *
+     * @access  public
+     * @param	\Memcahed	$memcached 	Memcached instance
+     * @param	boolean		$compress	(optional) Compress
+     * @param	int			$timeout	(optional) Timeout seconds
+     */
+    
+    public function __construct(PHP_Memcached $memcached, $prefix = '', $compress = true, $timeout = 1)
+    {
+        
+        $this->memcached = $memcached;
+        $this->prefix = $prefix;
+        
+        if($timeout !== 1)
+        {
+            $this->memcached->setOption(PHP_Memcached::OPT_CONNECT_TIMEOUT, ($timeout * 1000));
+        }
+    
+        if($compress === false)
+        {
+            $this->memcached->setOption(PHP_Memcached::OPT_COMPRESSION, false);
+        }
+    }
+    
+    /**
+     * Destructor.
+     *
+     * @access  public
+     */
+    
+    public function __destruct()
+    {
+        $this->memcached = null;
+    }
+    
+    //---------------------------------------------
+    // Class methods
+    //---------------------------------------------
+    
+    /**
+     * Store variable in the cache.
+     *
+     * @access  public
+     * @param   string   $key    Cache key
+     * @param   mixed    $value  The variable to store
+     * @param   int      $ttl    (optional) Time to live
+     * @return  boolean
+     */
+    
+    public function write($key, $value, $ttl = 0)
+    {
+        if($ttl !== 0)
+        {
+            $ttl += time();
+        }
+    
+        if($this->memcached->replace($this->prefix . $key, $value, $ttl) === false)
+        {
+            return $this->memcached->set($this->prefix . $key, $value, $ttl);
+        }
+    
+        return true;
+    }
+    
+    /**
+     * Fetch variable from the cache.
+     *
+     * @access  public
+     * @param   string  $key  Cache key
+     * @return  mixed
+     */
+    
+    public function read($key)
+    {
+        return $this->memcached->get($this->prefix . $key);
+    }
+    
+    /**
+     * Returns TRUE if the cache key exists and FALSE if not.
+     * 
+     * @access  public
+     * @param   string   $key  Cache key
+     * @return  boolean
+     */
+    
+    public function has($key)
+    {
+        return ($this->memcached->get($this->prefix . $key) !== false);
+    }
+    
+    /**
+     * Delete a variable from the cache.
+     *
+     * @access  public
+     * @param   string   $key  Cache key
+     * @return  boolean
+     */
+    
+    public function delete($key)
+    {
+        return $this->memcached->delete($this->prefix . $key, 0);
+    }
+    
+    /**
+     * Clears the user cache.
+     *
+     * @access  public
+     * @return  boolean
+     */
+    
+    public function clear()
+    {
+        return $this->memcached->flush();
+    }
 }

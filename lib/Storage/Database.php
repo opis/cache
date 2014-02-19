@@ -27,141 +27,140 @@ use Opis\Database\Database as DB;
 
 class Database implements StorageInterface
 {
-    
     protected $database;
     
     protected $table;
-	
-	protected $prefix;
-	
-	protected $columns;
+    
+    protected $prefix;
+    
+    protected $columns;
     
     public function __construct(DB $database, $table, $prefix = '')
     {
         $this->database = $database;
         $this->table = $table;
-		$this->prefix = $prefix;
+        $this->prefix = $prefix;
     }
     
     /**
-	 * Store variable in the cache.
-	 *
-	 * @access  public
-	 * @param   string   $key    Cache key
-	 * @param   mixed    $value  The variable to store
-	 * @param   int      $ttl    (optional) Time to live
-	 * @return  boolean
-	 */
-	
-	public function write($key, $value, $ttl = 0)
-	{
-		$ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
-		
-		try
-		{
-			$this->delete($key);
-			
-			return $this->database
-						->insert($this->table, array('key', 'data', 'lifetime'))
-						->values(array($this->prefix . $key, serialize($value), $ttl))
-						->execute();
-		}
-		catch(PDOException $e)
-		{
-			return false;
-		}
-	}
-	
-	/**
-	 * Fetch variable from the cache.
-	 *
-	 * @access  public
-	 * @param   string  $key  Cache key
-	 * @return  mixed
-	 */
-	
-	public function read($key)
-	{
-		try
-		{
-			$cache = $this->database->form($this->table)->where('key', $this->prefix . $key)->select()->first();
-						
-			if($cache !== false)
-			{
-				if(time() < $cache->lifetime)
-				{
-					return unserialize($cache->data);
-				}
-				else
-				{
-					$this->delete($key);
-					
-					return false;
-				}
-			}
-			else
-			{
-				return false;
-			}
-		}
-		catch(PDOException $e)
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * Returns TRUE if the cache key exists and FALSE if not.
-	 * 
-	 * @access  public
-	 * @param   string   $key  Cache key
-	 * @return  boolean
-	 */
-
-	public function has($key)
-	{
-		try
-		{
-			return (bool) $this->database->from($this->table)
-										 ->where('key', $this->prefix . $key)
-										 ->andWhere('lifetime', time(), '>')
-										 ->count();
-		}
-		catch(PDOException $e)
-		{
-			 return false;
-		}
-	}
-	
-	/**
-	 * Delete a variable from the cache.
-	 *
-	 * @access  public
-	 * @param   string   $key  Cache key
-	 * @return  boolean
-	 */
-	
-	public function delete($key)
-	{
-		try
-		{
-			return (bool) $this->database->table($this->table)->where('key', $this->prefix . $key)->delete();
-		}
-		catch(PDOException $e)
-		{
-			return false;
-		}
-	}
-	
-	/**
-	 * Clears the user cache.
-	 *
-	 * @access  public
-	 * @return  boolean
-	 */
-	
-	public function clear()
-	{
+     * Store variable in the cache.
+     *
+     * @access  public
+     * @param   string   $key    Cache key
+     * @param   mixed    $value  The variable to store
+     * @param   int      $ttl    (optional) Time to live
+     * @return  boolean
+     */
+    
+    public function write($key, $value, $ttl = 0)
+    {
+        $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
+        
+        try
+        {
+            $this->delete($key);
+            
+            return $this->database
+                        ->insert($this->table, array('key', 'data', 'lifetime'))
+                        ->values(array($this->prefix . $key, serialize($value), $ttl))
+                        ->execute();
+        }
+        catch(PDOException $e)
+        {
+            return false;
+        }
+    }
+    
+    /**
+     * Fetch variable from the cache.
+     *
+     * @access  public
+     * @param   string  $key  Cache key
+     * @return  mixed
+     */
+    
+    public function read($key)
+    {
+        try
+        {
+            $cache = $this->database->form($this->table)->where('key', $this->prefix . $key)->select()->first();
+                        
+            if($cache !== false)
+            {
+                if(time() < $cache->lifetime)
+                {
+                    return unserialize($cache->data);
+                }
+                else
+                {
+                    $this->delete($key);
+                    
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch(PDOException $e)
+        {
+            return false;
+        }
+    }
+    
+    /**
+     * Returns TRUE if the cache key exists and FALSE if not.
+     * 
+     * @access  public
+     * @param   string   $key  Cache key
+     * @return  boolean
+     */
+    
+    public function has($key)
+    {
+        try
+        {
+            return (bool) $this->database->from($this->table)
+                                         ->where('key', $this->prefix . $key)
+                                         ->andWhere('lifetime', time(), '>')
+                                         ->count();
+        }
+        catch(PDOException $e)
+        {
+             return false;
+        }
+    }
+    
+    /**
+     * Delete a variable from the cache.
+     *
+     * @access  public
+     * @param   string   $key  Cache key
+     * @return  boolean
+     */
+    
+    public function delete($key)
+    {
+        try
+        {
+            return (bool) $this->database->table($this->table)->where('key', $this->prefix . $key)->delete();
+        }
+        catch(PDOException $e)
+        {
+            return false;
+        }
+    }
+    
+    /**
+     * Clears the user cache.
+     *
+     * @access  public
+     * @return  boolean
+     */
+    
+    public function clear()
+    {
         try
         {
             $this->database->from($this->table)->delete();

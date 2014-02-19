@@ -28,6 +28,7 @@ use MongoCollection;
 class Mongo implements StorageInterface
 {
     
+    /** @var    \MongoCollectio Collection.*/
     protected $mongo;
     
     public function __construct(MongoCollection $mongo)

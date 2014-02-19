@@ -26,178 +26,178 @@ use Opis\Cache\StorageInterface;
 class File implements StorageInterface
 {
 
-	/** @var	string	Cache path. */
-	protected $path;
-	
-	protected $prefix;
-	
-	protected $extension;
-
-	/**
-	 * Constructor.
-	 *
-	 * @access  public
-	 * @param	string	$identifier Identifier
-	 * @param	string	$path	Path
-	 */
-
-	public function __construct($path, $prefix = '', $extension = '.cache')
-	{
-		
-		$this->path = rtrim($path, '/');
-		$this->prefix = $prefix;
-		$this->extension = $extension;
-		
-		if(file_exists($this->path) === false || is_readable($this->path) === false || is_writable($this->path) === false)
-		{
-			throw new RuntimeException(vsprintf("%s(): Cache directory ('%s') is not writable.", array(__METHOD__, $this->path)));
-		}
-	}
-
-
-	/**
-	 * Returns the path to the cache file.
-	 * 
-	 * @access  public
-	 * @param   string  $key  Cache key
-	 * @return  string
-	 */
-
-	protected function cacheFile($key)
-	{
-		return $this->path . '/' . $this->prefix . $key . $this->extension;
-	}
-
-	/**
-	 * Store variable in the cache.
-	 *
-	 * @access  public
-	 * @param   string   $key    Cache key
-	 * @param   mixed    $value  The variable to store
-	 * @param   int      $ttl    (optional) Time to live
-	 * @return  boolean
-	 */
-
-	public function write($key, $value, $ttl = 0)
-	{
-		$ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
-		
-		$data = "{$ttl}\n" . serialize($value);
-		
-		return is_int(file_put_contents($this->cacheFile($key), $data, LOCK_EX));
-	}
-
-	/**
-	 * Fetch variable from the cache.
-	 *
-	 * @access  public
-	 * @param   string  $key  Cache key
-	 * @return  mixed
-	 */
-
-	public function read($key)
-	{
-		if(file_exists($this->cacheFile($key)))
-		{
-			// Cache exists
-			
-			$handle = fopen($this->cacheFile($key), 'r');
-
-			if(time() < (int) trim(fgets($handle)))
-			{
-				$cache = '';
-
-				while(!feof($handle))
-				{
-					$cache .= fgets($handle);
-				}
-
-				fclose($handle);
-
-				return unserialize($cache);
-			}
-			else
-			{
-
-				fclose($handle);
-
-				unlink($this->cacheFile($key));
-
-				return false;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Returns TRUE if the cache key exists and FALSE if not.
-	 * 
-	 * @access  public
-	 * @param   string   $key  Cache key
-	 * @return  boolean
-	 */
-
-	public function has($key)
-	{
-		if(file_exists($this->cacheFile($key)))
-		{
-			$handle = fopen($this->cacheFile($key), 'r');
-			
-			$expired = (time() < (int) trim(fgets($handle)));
-			
-			fclose($handle);
-			
-			return $expired;
-		}
-
-		return false;
-	}
-
-
-	/**
-	 * Delete a variable from the cache.
-	 *
-	 * @access  public
-	 * @param   string   $key  Cache key
-	 * @return  boolean
-	 */
-
-	public function delete($key)
-	{
-		if(file_exists($this->cacheFile($key)))
-		{
-			return unlink($this->cacheFile($key));
-		}
-
-		return false;
-	}
-
-	/**
-	 * Clears the user cache.
-	 *
-	 * @access  public
-	 * @return  boolean
-	 */
-
-	public function clear()
-	{
-		$files = scandir($this->path);
-		
-		if($files !== false)
-		{
-			foreach($files as $file)
-			{
-				$lenght = mb_strlen($file);
-				if($lenght > 6 && mb_substr($lenght - 6, 6) === '.cache')
-				{
-					if(unlink($this->path . '/' . $file) === false)
-					{
-						return false;
-					}
-				}
-			}
-		}
-
-		return true;
-	}
+    /** @var	string	Cache path. */
+    protected $path;
+    
+    protected $prefix;
+    
+    protected $extension;
+    
+    /**
+     * Constructor.
+     *
+     * @access  public
+     * @param	string	$identifier Identifier
+     * @param	string	$path	Path
+     */
+    
+    public function __construct($path, $prefix = '', $extension = '.cache')
+    {
+        
+        $this->path = rtrim($path, '/');
+        $this->prefix = $prefix;
+        $this->extension = $extension;
+        
+        if(file_exists($this->path) === false || is_readable($this->path) === false || is_writable($this->path) === false)
+        {
+            throw new RuntimeException(vsprintf("%s(): Cache directory ('%s') is not writable.", array(__METHOD__, $this->path)));
+        }
+    }
+    
+    
+    /**
+     * Returns the path to the cache file.
+     * 
+     * @access  public
+     * @param   string  $key  Cache key
+     * @return  string
+     */
+    
+    protected function cacheFile($key)
+    {
+        return $this->path . '/' . $this->prefix . $key . $this->extension;
+    }
+    
+    /**
+     * Store variable in the cache.
+     *
+     * @access  public
+     * @param   string   $key    Cache key
+     * @param   mixed    $value  The variable to store
+     * @param   int      $ttl    (optional) Time to live
+     * @return  boolean
+     */
+    
+    public function write($key, $value, $ttl = 0)
+    {
+        $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
+        
+        $data = "{$ttl}\n" . serialize($value);
+        
+        return is_int(file_put_contents($this->cacheFile($key), $data, LOCK_EX));
+    }
+    
+    /**
+     * Fetch variable from the cache.
+     *
+     * @access  public
+     * @param   string  $key  Cache key
+     * @return  mixed
+     */
+    
+    public function read($key)
+    {
+        if(file_exists($this->cacheFile($key)))
+        {
+            // Cache exists
+            
+            $handle = fopen($this->cacheFile($key), 'r');
+    
+            if(time() < (int) trim(fgets($handle)))
+            {
+                $cache = '';
+    
+                while(!feof($handle))
+                {
+                    $cache .= fgets($handle);
+                }
+    
+                fclose($handle);
+    
+                return unserialize($cache);
+            }
+            else
+            {
+    
+                fclose($handle);
+    
+                unlink($this->cacheFile($key));
+    
+                return false;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Returns TRUE if the cache key exists and FALSE if not.
+     * 
+     * @access  public
+     * @param   string   $key  Cache key
+     * @return  boolean
+     */
+    
+    public function has($key)
+    {
+        if(file_exists($this->cacheFile($key)))
+        {
+            $handle = fopen($this->cacheFile($key), 'r');
+            
+            $expired = (time() < (int) trim(fgets($handle)));
+            
+            fclose($handle);
+            
+            return $expired;
+        }
+    
+        return false;
+    }
+    
+    
+    /**
+     * Delete a variable from the cache.
+     *
+     * @access  public
+     * @param   string   $key  Cache key
+     * @return  boolean
+     */
+    
+    public function delete($key)
+    {
+        if(file_exists($this->cacheFile($key)))
+        {
+            return unlink($this->cacheFile($key));
+        }
+    
+        return false;
+    }
+    
+    /**
+     * Clears the user cache.
+     *
+     * @access  public
+     * @return  boolean
+     */
+    
+    public function clear()
+    {
+        $files = scandir($this->path);
+        
+        if($files !== false)
+        {
+            foreach($files as $file)
+            {
+                $lenght = mb_strlen($file);
+                if($lenght > 6 && mb_substr($lenght - 6, 6) === '.cache')
+                {
+                    if(unlink($this->path . '/' . $file) === false)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        
+        return true;
+    }
 }

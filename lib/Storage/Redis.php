@@ -27,15 +27,15 @@ class Redis implements StorageInterface
 {
     protected $redis;
     
-	protected $prefix;
-	
+    protected $prefix;
+    
     /**
      * Constructor
      */
     public function __construct(Client $redis, $prefix = '')
     {
         $this->redis = $redis;
-		$this->prefix = $prefix;
+        $this->prefix = $prefix;
     }
     
     /**
@@ -48,75 +48,75 @@ class Redis implements StorageInterface
     }
     
     /**
-	 * Store variable in the cache.
-	 *
-	 * @access  public
-	 * @param   string   $key    Cache key
-	 * @param   mixed    $value  The variable to store
-	 * @param   int      $ttl    (optional) Time to live
-	 * @return  boolean
-	 */
-	
-	public function write($key, $value, $ttl = 0)
-	{
+     * Store variable in the cache.
+     *
+     * @access  public
+     * @param   string   $key    Cache key
+     * @param   mixed    $value  The variable to store
+     * @param   int      $ttl    (optional) Time to live
+     * @return  boolean
+     */
+    
+    public function write($key, $value, $ttl = 0)
+    {
         $this->redis->set($this->prefix . $key, is_numeric($value) ? $value : serialize($value));
         if($ttl != 0)
         {
             $this->redis->expire($this->prefix . $key, $ttl);
         }
         return true;
-	}
-	
-	/**
-	 * Fetch variable from the cache.
-	 *
-	 * @access  public
-	 * @param   string  $key  Cache key
-	 * @return  mixed
-	 */
-	
-	public function read($key)
-	{
+    }
+    
+    /**
+     * Fetch variable from the cache.
+     *
+     * @access  public
+     * @param   string  $key  Cache key
+     * @return  mixed
+     */
+    
+    public function read($key)
+    {
         $data = $this->redis->get($this->prefix . $key);
         return $data === null ? false : (is_numeric($data) ? $data : unserialize($data));
-	}
-
-	/**
-	 * Returns TRUE if the cache key exists and FALSE if not.
-	 * 
-	 * @access  public
-	 * @param   string   $key  Cache key
-	 * @return  boolean
-	 */
-
-	public function has($key)
-	{
-        return (bool) $this->redis->exists($this->prefix . $key);
-	}
-	
-	/**
-	 * Delete a variable from the cache.
-	 *
-	 * @access  public
-	 * @param   string   $key  Cache key
-	 * @return  boolean
-	 */
-	
-	public function delete($key)
-	{
-        return (bool) $this->redis->exists($this->prefix . $key);
-	}
-	
-	/**
-	 * Clears the user cache.
-	 *
-	 * @access  public
-	 * @return  boolean
-	 */
-	
-	public function clear()
-	{
-        return (bool) $this->redis->flushdb();
-	}
+    }
     
+    /**
+     * Returns TRUE if the cache key exists and FALSE if not.
+     * 
+     * @access  public
+     * @param   string   $key  Cache key
+     * @return  boolean
+     */
+    
+    public function has($key)
+    {
+        return (bool) $this->redis->exists($this->prefix . $key);
+    }
+    
+    /**
+     * Delete a variable from the cache.
+     *
+     * @access  public
+     * @param   string   $key  Cache key
+     * @return  boolean
+     */
+    
+    public function delete($key)
+    {
+        return (bool) $this->redis->exists($this->prefix . $key);
+    }
+    
+    /**
+     * Clears the user cache.
+     *
+     * @access  public
+     * @return  boolean
+     */
+    
+    public function clear()
+    {
+        return (bool) $this->redis->flushdb();
+    }
+
 }

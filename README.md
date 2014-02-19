@@ -30,7 +30,7 @@ This library is available on [Packagist](https://packagist.org/packages/opis/cac
 ```json
 {
     "require": {
-        "opis/cache": "1.3.*"
+        "opis/cache": "1.4.*"
     }
 }
 ```
@@ -55,5 +55,28 @@ $cache->delete('key');
 $value = $cache->load('key', function(){
     return array();
 }, 3600);
+
+```
+
+Using a `StorageCollection`
+
+```php
+use \Opis\Cache\Storage\Memory as MemoryStorage;
+use \Opis\Cache\StorageCollection;
+
+$collection = new StorageCollection();
+
+$collection->add('memory', function(){
+    return new MemoryStorage();
+});
+
+$collection->get('memory')->write('name', 'Opis Cache');
+
+//Serialize - unserialize
+
+$collection = unserialize(serialize($collection));
+
+
+print collection->get('memory')->read('name'); //> Opis Cache
 
 ```

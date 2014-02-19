@@ -1,7 +1,7 @@
 {
     "name": "opis/cache",
-    "description": "Cache system with support for multiple backend storages",
-    "keywords": ["cache", "caching", "file"],
+    "description": "Cache system with support for multiple storages (APC, Redis, Database, Mongo, File and others)",
+    "keywords": ["cache", "caching", "file", "redis", "database", "apc"],
     "homepage": "http://opis.io",
     "license": "Apache-2.0",
     "authors": [

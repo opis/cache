@@ -50,12 +50,12 @@ class Proxy implements StorageInterface
 	public function write($key, $value, $ttl = 0)
 	{
 		$ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
-        
-        if($this->proxy->write($key, $value, $ttl))
-        {
-            $this->cache[$key] = $value;
-            return true;
-        }
+		
+		if($this->proxy->write($key, $value, $ttl))
+		{
+			$this->cache[$key] = $value;
+			return true;
+		}
 		
 		return false;
 	}
@@ -120,11 +120,11 @@ class Proxy implements StorageInterface
 
 	public function clear()
 	{
-        if($this->proxy->clear())
-        {
+		if($this->proxy->clear())
+		{
 			$this->cache = array();
 			return true;
-        }
-        return false;
+		}
+		return false;
 	}
 }

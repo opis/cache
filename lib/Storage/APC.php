@@ -26,21 +26,21 @@ use Opis\Cache\StorageInterface;
 class APC implements StorageInterface
 {
 	
-	protected $prefix;
-	
-	/**
-	 * Constructor.
-	 *
-	 * @access	public
-	 * @param	string	$identifier	Identifier
-	 */
+    protected $prefix;
+    
+    /**
+     * Constructor.
+     *
+     * @access	public
+     * @param	string	$identifier	Identifier
+     */
         
 	public function __construct($prefix = '')
 	{	
-		if(function_exists('apc_fetch') === false)
-		{
-			throw new RuntimeException(vsprintf("%s(): APC is not available.", array(__METHOD__)));
-		}
+        if(function_exists('apc_fetch') === false)
+        {
+            throw new RuntimeException(vsprintf("%s(): APC is not available.", array(__METHOD__)));
+        }
 	}
         
 	/**
@@ -95,7 +95,7 @@ class APC implements StorageInterface
         
 	public function delete($key)
 	{
-	    return apc_delete($this->prefix . $key);
+        return apc_delete($this->prefix . $key);
 	}
         
 	/**
@@ -107,6 +107,6 @@ class APC implements StorageInterface
         
 	public function clear()
 	{
-	    return apc_clear_cache('user');
+        return apc_clear_cache('user');
 	}
 }

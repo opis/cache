@@ -4,7 +4,7 @@ Opis Cache
 [![Latest Unstable Version](https://poser.pugx.org/opis/cache/v/unstable.png)](//packagist.org/packages/opis/cache)
 [![License](https://poser.pugx.org/opis/cache/license.png)](https://packagist.org/packages/opis/cache)
 
-Cache system with support for multiple storages.
+Cache library with support for multiple storages.
 
 Supported storages:
 

@@ -162,16 +162,16 @@ class Database implements StorageInterface
 	
 	public function clear()
 	{
-		try
-		{
-			$this->database->from($this->table)->delete();
+        try
+        {
+            $this->database->from($this->table)->delete();
             
-			return true;
-		}
-		catch(PDOException $e)
-		{
-			return false;
-		}
-	}
+            return true;
+        }
+        catch(PDOException $e)
+        {
+            return false;
+        }
+    }
     
 }

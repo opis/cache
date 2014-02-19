@@ -25,7 +25,7 @@ use Opis\Cache\StorageInterface;
 use MongoCollection;
 
 
-class Database implements StorageInterface
+class Mongo implements StorageInterface
 {
     
     protected $mongo;
@@ -36,77 +36,77 @@ class Database implements StorageInterface
     }
     
     /**
-	 * Store variable in the cache.
-	 *
-	 * @access  public
-	 * @param   string   $key    Cache key
-	 * @param   mixed    $value  The variable to store
-	 * @param   int      $ttl    (optional) Time to live
-	 * @return  boolean
-	 */
-	
-	public function write($key, $value, $ttl = 0)
-	{
-		$ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
-		
+     * Store variable in the cache.
+     *
+     * @access  public
+     * @param   string   $key    Cache key
+     * @param   mixed    $value  The variable to store
+     * @param   int      $ttl    (optional) Time to live
+     * @return  boolean
+     */
+    
+    public function write($key, $value, $ttl = 0)
+    {
+        $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
+        
         $this->mongo->save(array('_id' => $key, 'data' => $value, 'lifetime' => $ttl));
         
         return true;
-	}
-	
-	/**
-	 * Fetch variable from the cache.
-	 *
-	 * @access  public
-	 * @param   string  $key  Cache key
-	 * @return  mixed
-	 */
-	
-	public function read($key)
-	{
+    }
+    
+    /**
+     * Fetch variable from the cache.
+     *
+     * @access  public
+     * @param   string  $key  Cache key
+     * @return  mixed
+     */
+    
+    public function read($key)
+    {
         $result = $this->mongo->findOne(array('_id' => $id), array('data'));
         
         return $result === null ? false : $result['data'];
-	}
-
-	/**
-	 * Returns TRUE if the cache key exists and FALSE if not.
-	 * 
-	 * @access  public
-	 * @param   string   $key  Cache key
-	 * @return  boolean
-	 */
-
-	public function has($key)
-	{
+    }
+    
+    /**
+     * Returns TRUE if the cache key exists and FALSE if not.
+     * 
+     * @access  public
+     * @param   string   $key  Cache key
+     * @return  boolean
+     */
+    
+    public function has($key)
+    {
         return null !== $this->mongo->findOne(array('_id' => $id));
-	}
-	
-	/**
-	 * Delete a variable from the cache.
-	 *
-	 * @access  public
-	 * @param   string   $key  Cache key
-	 * @return  boolean
-	 */
-	
-	public function delete($key)
-	{
+    }
+    
+    /**
+     * Delete a variable from the cache.
+     *
+     * @access  public
+     * @param   string   $key  Cache key
+     * @return  boolean
+     */
+    
+    public function delete($key)
+    {
         $this->mongo->remove(array('_id' => $key));
         return true;
-	}
-	
-	/**
-	 * Clears the user cache.
-	 *
-	 * @access  public
-	 * @return  boolean
-	 */
-	
-	public function clear()
-	{
+    }
+    
+    /**
+     * Clears the user cache.
+     *
+     * @access  public
+     * @return  boolean
+     */
+    
+    public function clear()
+    {
         $this->mongo->deleteIndexes();
         return true;
-	}
+    }
     
 }

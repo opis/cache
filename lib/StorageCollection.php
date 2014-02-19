@@ -110,7 +110,7 @@ class StorageCollection implements Serializable
         $object = serialize(array(
             'defaultStorage' => $this->defaultStorage,
             'storages' => array_map(function($value){
-                SerializableClosure::from($value);
+               return SerializableClosure::from($value);
             }, $this->storages),
         ));
         SerializableClosure::exitContext();

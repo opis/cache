@@ -48,8 +48,8 @@ class File implements StorageInterface
         
         $this->path = rtrim($path, '/');
         
-        $prefix = trim('.', $prefix);
-        $extension = trim('.', $extension);
+        $prefix = trim($prefix, '.');
+        $extension = trim($extension, '.');
         
         $this->prefix = $prefix === '' ? '' : $prefix . '.';
         $this->extension = $extension === '' ? '' : '.' . $extension;

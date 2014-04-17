@@ -44,9 +44,9 @@ class PHPFile implements StorageInterface
     
     public function __construct($path, $prefix = '', $extension = 'php')
     {
-        $this->path = rtrim('/', $path);
-        $prefix = trim('.', $prefix);
-        $extension = trim('.', $extension);
+        $this->path = rtrim($path, '/');
+        $prefix = trim($prefix, '.');
+        $extension = trim($extension, '.');
         
         $this->prefix = $prefix === '' ? '' : $prefix . '.';
         $this->extension = $extension === '' ? '' : '.' . $extension;

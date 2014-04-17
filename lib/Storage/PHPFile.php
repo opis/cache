@@ -23,10 +23,9 @@ namespace Opis\Cache\Storage;
 use RuntimeException;
 use Opis\Cache\StorageInterface;
 
-class File implements StorageInterface
+class PHPFile implements StorageInterface
 {
 
-    /** @var	string	Cache path. */
     protected $path;
     
     protected $prefix;
@@ -38,16 +37,14 @@ class File implements StorageInterface
      *
      * @access  public
      * 
-     * @param   string  $path       Path
-     * @param   string  $prefix     Prefix
+     * @param	string	$path       Path
+     * @param	string	$prefix     Prefix
      * @param   string  $extension  File extension
      */
     
-    public function __construct($path, $prefix = '', $extension = 'cache')
+    public function __construct($path, $prefix = '', $extension = 'php')
     {
-        
-        $this->path = rtrim($path, '/');
-        
+        $this->path = rtrim('/', $path);
         $prefix = trim('.', $prefix);
         $extension = trim('.', $extension);
         
@@ -88,7 +85,7 @@ class File implements StorageInterface
     {
         $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
         
-        $data = "{$ttl}\n" . serialize($value);
+        $data = "<?php\nreturn array('ttl' => " . $ttl . ", 'data' => '" . serialize($value) . "');\n";
         
         return is_int(file_put_contents($this->cacheFile($key), $data, LOCK_EX));
     }
@@ -103,35 +100,25 @@ class File implements StorageInterface
     
     public function read($key)
     {
-        if(file_exists($this->cacheFile($key)))
+        $file = $this->cacheFile($key);
+        
+        if(file_exists($file))
         {
             // Cache exists
             
-            $handle = fopen($this->cacheFile($key), 'r');
-    
-            if(time() < (int) trim(fgets($handle)))
+            $data = include $file;
+            
+            if(time() < $data['ttl'])
             {
-                $cache = '';
-    
-                while(!feof($handle))
-                {
-                    $cache .= fgets($handle);
-                }
-    
-                fclose($handle);
-    
-                return unserialize($cache);
+                return unserialize($data['data']);
             }
             else
             {
-    
-                fclose($handle);
-    
-                unlink($this->cacheFile($key));
-    
+                unlink($file);
                 return false;
             }
         }
+        
         return false;
     }
     
@@ -145,17 +132,15 @@ class File implements StorageInterface
     
     public function has($key)
     {
-        if(file_exists($this->cacheFile($key)))
+        $file = $this->cacheFile($key);
+        
+        if(file_exists($file))
         {
-            $handle = fopen($this->cacheFile($key), 'r');
+            $data = include $file;
             
-            $expired = (time() < (int) trim(fgets($handle)));
-            
-            fclose($handle);
-            
-            return $expired;
+            return time() < $data['ttl'];
         }
-    
+        
         return false;
     }
     
@@ -170,11 +155,13 @@ class File implements StorageInterface
     
     public function delete($key)
     {
-        if(file_exists($this->cacheFile($key)))
+        $file = $this->cacheFile($file);
+        
+        if(file_exists($file))
         {
-            return unlink($this->cacheFile($key));
+            return unlink($file);
         }
-    
+        
         return false;
     }
     

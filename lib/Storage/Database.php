@@ -22,24 +22,43 @@ namespace Opis\Cache\Storage;
 
 use PDOException;
 use Opis\Cache\StorageInterface;
-use Opis\Database\Database as DB;
+use Opis\Database\Connection;
+use Opis\Database\Database as OpisDatabase;
 
 
 class Database implements StorageInterface
 {
-    protected $database;
+    /** @var    \Opis\Database\Database Database. */
+    protected $db;
     
+    /** @var    string  Cache table. */
     protected $table;
     
+    /** @var    string  Table prefix. */
     protected $prefix;
     
+    /** @var    array   Column map. */
     protected $columns;
-    
-    public function __construct(DB $database, $table, $prefix = '')
+     
+    public function __construct(Connection $connection, $table, $prefix = '', $columns = null)
     {
-        $this->database = $database;
+        $this->db = new OpisDatabase($connection);
         $this->table = $table;
-        $this->prefix = $prefix;
+        $prefix = trim($prefix);
+        $this->prefix = $prefix === '' ? '' : $prefix . '.';
+        
+        if($columns === null || !is_array($columns))
+        {
+            $columns = array();
+        }
+        
+        $columns += array(
+            'key' => 'key',
+            'data' => 'data',
+            'ttl' => 'ttl',
+        );
+        
+        $this->columns = $columns;
     }
     
     /**
@@ -60,10 +79,12 @@ class Database implements StorageInterface
         {
             $this->delete($key);
             
-            return $this->database
-                        ->insert($this->table, array('key', 'data', 'lifetime'))
-                        ->values(array($this->prefix . $key, serialize($value), $ttl))
-                        ->execute();
+            return $this->db->into($this->table)->insert(array(
+                $this->columns['key'] => $this->prefix . $key,
+                $this->columns['data'] => serialize($value),
+                $this->columns['ttl'] => $ttl,
+            ));
+            
         }
         catch(PDOException $e)
         {
@@ -83,13 +104,16 @@ class Database implements StorageInterface
     {
         try
         {
-            $cache = $this->database->form($this->table)->where('key', $this->prefix . $key)->select()->first();
+            $cache = $this->db->form($this->table)
+                              ->where($this->columns['key'], $this->prefix . $key)
+                              ->select()
+                              ->first();
                         
             if($cache !== false)
             {
-                if(time() < $cache->lifetime)
+                if(time() < $cache->{$this->columns['ttl']})
                 {
-                    return unserialize($cache->data);
+                    return unserialize($cache->{$this->columns['data']});
                 }
                 else
                 {
@@ -121,10 +145,10 @@ class Database implements StorageInterface
     {
         try
         {
-            return (bool) $this->database->from($this->table)
-                                         ->where('key', $this->prefix . $key)
-                                         ->andWhere('lifetime', time(), '>')
-                                         ->count();
+            return (bool) $this->db->from($this->table)
+                                   ->where($this->columns['key'], $this->prefix . $key)
+                                   ->andWhere($this->columns['ttl'], time(), '>')
+                                   ->count();
         }
         catch(PDOException $e)
         {
@@ -144,7 +168,9 @@ class Database implements StorageInterface
     {
         try
         {
-            return (bool) $this->database->table($this->table)->where('key', $this->prefix . $key)->delete();
+            return (bool) $this->db->from($this->table)
+                                   ->where($this->columns['key'], $this->prefix . $key)
+                                   ->delete();
         }
         catch(PDOException $e)
         {
@@ -163,7 +189,7 @@ class Database implements StorageInterface
     {
         try
         {
-            $this->database->from($this->table)->delete();
+            $this->db->from($this->table)->delete();
             
             return true;
         }

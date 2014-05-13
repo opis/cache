@@ -85,7 +85,7 @@ class PHPFile implements StorageInterface
     {
         $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
         
-        $data = "<?php\nreturn array('ttl' => " . $ttl . ", 'data' => base64_decode('" . base64_encode(serialize($value)) . "'));\n";
+        $data = "<?php\n\rreturn " . preg_replace('/\s=>\s(\n\s+)array\s\(\n/', " => array (\n", var_export(array('ttl'=> $ttl, 'data' => serialize($value)), true)) . ';';
         
         return is_int(file_put_contents($this->cacheFile($key), $data, LOCK_EX));
     }

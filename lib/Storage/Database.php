@@ -104,7 +104,7 @@ class Database implements StorageInterface
     {
         try
         {
-            $cache = $this->db->form($this->table)
+            $cache = $this->db->from($this->table)
                               ->where($this->columns['key'], $this->prefix . $key)
                               ->select()
                               ->first();

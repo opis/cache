@@ -30,7 +30,7 @@ This library is available on [Packagist](https://packagist.org/packages/opis/cac
 ```json
 {
     "require": {
-        "opis/cache": "1.6.*"
+        "opis/cache": "1.7.*"
     }
 }
 ```

@@ -79,11 +79,13 @@ class Database implements StorageInterface
         {
             $this->delete($key);
             
-            return $this->db->into($this->table)->insert(array(
-                $this->columns['key'] => $this->prefix . $key,
-                $this->columns['data'] => serialize($value),
-                $this->columns['ttl'] => $ttl,
-            ));
+            return $this->db
+                        ->insert(array(
+                            $this->columns['key'] => $this->prefix .  $key,
+                            $this->columns['data'] => serialize($value),
+                            $this->columns['ttl'] => $ttl,
+                        ))
+                        ->into($this->table);
             
         }
         catch(PDOException $e)
@@ -105,15 +107,16 @@ class Database implements StorageInterface
         try
         {
             $cache = $this->db->from($this->table)
-                              ->where($this->columns['key'], $this->prefix . $key)
+                              ->where($this->columns['key'])->eq($this->prefix . $key)
                               ->select()
+                              ->fetchAssoc()
                               ->first();
                         
             if($cache !== false)
             {
-                if(time() < $cache->{$this->columns['ttl']})
+                if(time() < $cache[$this->columns['ttl']])
                 {
-                    return unserialize($cache->{$this->columns['data']});
+                    return unserialize($cache[$this->columns['data']]);
                 }
                 else
                 {
@@ -146,8 +149,8 @@ class Database implements StorageInterface
         try
         {
             return (bool) $this->db->from($this->table)
-                                   ->where($this->columns['key'], $this->prefix . $key)
-                                   ->andWhere($this->columns['ttl'], time(), '>')
+                                   ->where($this->columns['key'])->eq($this->prefix . $key)
+                                   ->andWhere($this->columns['ttl'])->gt(time())
                                    ->count();
         }
         catch(PDOException $e)
@@ -169,7 +172,7 @@ class Database implements StorageInterface
         try
         {
             return (bool) $this->db->from($this->table)
-                                   ->where($this->columns['key'], $this->prefix . $key)
+                                   ->where($this->columns['key'])->eq($this->prefix . $key)
                                    ->delete();
         }
         catch(PDOException $e)

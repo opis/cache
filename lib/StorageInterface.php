@@ -23,14 +23,54 @@ namespace Opis\Cache;
 interface StorageInterface
 {
   
-  function read($key);
-  
-  function write($key, $value, $ttl = 0);
-  
-  function delete($key);
-  
-  function has($key);
-  
-  function clear();
+    /**
+     * Read from cache
+     *
+     * @param   string  $key    Cache key
+     *
+     * @return  mixed
+     */
+    
+    public function read($key);
+    
+    /**
+     * Write to cache
+     *
+     * @param   string  $key    Cache key
+     * @param   mixed   $value  The value that needs to be stored
+     * @param   int     $ttl    (optional) Time to life
+     *
+     * @return  boolean
+     */
+    
+    public function write($key, $value, $ttl = 0);
+    
+    /**
+     * Remove from cache
+     *
+     * @param   string  $key    Cache key
+     *
+     * @return  boolean
+     */
+    
+    public function delete($key);
+    
+    /**
+     * Check if cache exists for the specifed key
+     *
+     * @param   string  $key    Cache key
+     *
+     * @return  boolean
+     */
+    
+    public function has($key);
+    
+    /**
+     * Clear the cache
+     *
+     * @return  boolean
+     */
+    
+    public function clear();
   
 }

@@ -4,79 +4,48 @@ Opis Cache
 [![Latest Unstable Version](https://poser.pugx.org/opis/cache/v/unstable.png)](//packagist.org/packages/opis/cache)
 [![License](https://poser.pugx.org/opis/cache/license.png)](https://packagist.org/packages/opis/cache)
 
-Cache library with support for multiple storages.
+Caching library
+----------------
+**Opis Cache** is a caching library, with support for multiple backend storages, that provides developers an API which allows
+them to deal with cached content in a standardised way, no matter where that content is stored. Also, the **Opis Cache**'s
+simple and effective architecture, ensures that support for new backend storages can be easily achieved
+by simply implementing an interface.
 
-Supported storages:
+The currently supported storages are: APC, APCU, Database, File, Memory, Memcache, Memcached, MongoDB, Proxy, Redis, WinCache, XCache, ZendCache and ZendMemory.
 
-* APC
-* APCU
-* Database (MySQL, PostgreSQL, MS SQL Server, Oracle, DB2, SQLite, Firebird, NuoDB)
-* File
-* Memcache
-* Memcached
-* Memory
-* MongoDB
-* Proxy
-* Redis
-* WinCache
-* XCache
-* ZendDisk
-* ZendMemory
+### License
 
-###Installation
+**Opis Cache** is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0). 
 
-This library is available on [Packagist](https://packagist.org/packages/opis/cache) and can be installed using [Composer](http://getcomposer.org)
+### Requirements
+
+* PHP 5.3.* or higher
+* [Opis Closure](http://www.opis.io/closure) 1.3.*
+* [Opis Database](http://www.opis.io/database) 2.0.* (for Database storage)
+* [Predis](https://github.com/nrk/predis) 0.8.* (for Redis storage)
+
+### Installation
+
+This library is available on [Packagist](https://packagist.org/packages/opis/cache) and can be installed using [Composer](http://getcomposer.org).
 
 ```json
 {
     "require": {
-        "opis/cache": "1.7.*"
+        "opis/cache": "2.0.*"
     }
 }
 ```
-###Documentation
 
-###Examples
+If you are unable to use [Composer](http://getcomposer.org) you can download the
+[tar.gz](https://github.com/opis/cache/archive/2.0.0.tar.gz) or the [zip](https://github.com/opis/cache/archive/2.0.0.zip)
+archive file, extract the content of the archive and include de `autoload.php` file into your project. 
 
 ```php
-use \Opis\Cache\Cache;
-use \Opis\Cache\Storage\File as FileStorage;
 
-$cache = new Cache(new FileStorage('/path/to/folder'));
-$cache->write('key', 'value');
-
-if($cache->has('key'))
-{
-    $value = $cache->read('key');
-}
-
-$cache->delete('key');
-
-$value = $cache->load('key', function(){
-    return array();
-}, 3600);
+require_once 'path/to/cache-2.0.0/autoload.php';
 
 ```
 
-Using a `StorageCollection`
+### Documentation
 
-```php
-use \Opis\Cache\Storage\Memory as MemoryStorage;
-use \Opis\Cache\StorageCollection;
-
-$collection = new StorageCollection();
-
-$collection->add('memory', function(){
-    return new MemoryStorage();
-});
-
-$collection->get('memory')->write('name', 'Opis Cache');
-
-//Serialize - unserialize
-
-$collection = unserialize(serialize($collection));
-
-
-print collection->get('memory')->read('name'); //> Opis Cache
-
-```
+Examples and documentation can be found at http://opis.io/cache .

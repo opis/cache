@@ -5,6 +5,7 @@ CHANGELOG
 * `Opis\Cache\Cache` class no longer implement `Opis\Cache\StorageInterface` interface
 * Removed `__call` macgic method from `Opis\Cache\Cache` class
 * Commented code
+* Added autoload file
 
 ### Opis Cache 1.7.0, 2014.10.23
 

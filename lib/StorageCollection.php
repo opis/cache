@@ -27,11 +27,26 @@ use Opis\Closure\SerializableClosure;
 
 class StorageCollection implements Serializable
 {
+    /** @var    array   A list of storages */
     protected $storages = array();
     
+    /** @var    array   A list of Opis\Cache\Cache instances */
     protected $instances = array();
     
+    /** @var    string  The default storage name */
     protected $defaultStorage;
+    
+    /**
+     * Add a new storage
+     *
+     * @access  public
+     * 
+     * @param   string      $storage        Storage name
+     * @param   \Closure    $constructor    Storage constructor
+     * @param   boolean     $default        (optional) Is default storage
+     *
+     * @return  \Opis\Cache\StorageCollection   Self reference
+     */
     
     public function add($storage, Closure $constructor, $default = false)
     {
@@ -51,6 +66,16 @@ class StorageCollection implements Serializable
         return $this;
     }
     
+    /**
+     * Remove a storage
+     *
+     * @access  public
+     * 
+     * @param   string  $storage    Storage name
+     *
+     * @return  \Opis\Cache\StorageCollection   Self reference
+     */
+    
     public function remove($storage)
     {
         unset($this->storages[$storage]);
@@ -68,10 +93,30 @@ class StorageCollection implements Serializable
         return $this;
     }
     
+    /**
+     * Check if the specified storage exists
+     *
+     * @access  public
+     * 
+     * @param   string  $storage    Storage name
+     *
+     * @return  boolean
+     */
+    
     public function has($storage)
     {
         return isset($this->storages[$storage]);
     }
+    
+    /**
+     * Set the default storage
+     *
+     * @access  public
+     * 
+     * @param   string  $storage    Storage name
+     *
+     * @return  \Opis\Cache\StorageCollection   Self reference
+     */
     
     public function setDefault($storage)
     {
@@ -82,6 +127,16 @@ class StorageCollection implements Serializable
         
         return $this;
     }
+    
+    /**
+     * Get an instance of the specifed cache storage
+     *
+     * @access  public
+     * 
+     * @param   string  $storage    (option) Storage name
+     *
+     * @return  \Opis\Cache\Cache
+     */
     
     public function get($storage = null)
     {
@@ -104,6 +159,14 @@ class StorageCollection implements Serializable
         return $this->instances[$storage];
     }
     
+    /**
+     * Perform the serialization
+     *
+     * @access  public
+     * 
+     * @return  mixed
+     */
+    
     public function serialize()
     {
         SerializableClosure::enterContext();
@@ -116,6 +179,12 @@ class StorageCollection implements Serializable
         SerializableClosure::exitContext();
         return $object;
     }
+    
+    /**
+     * Perform deserialization
+     *
+     * @access  public
+     */
     
     public function unserialize($data)
     {

@@ -24,38 +24,109 @@ use Closure;
 
 class Cache
 {
-    
+    /** @var    \Opis\Cache\StorageInterface    Cache storage */
     protected $storage;
+    
+    /**
+     * Constructor
+     *
+     * @access  public
+     * 
+     * @param   \Opis\Cache\StorageInterface    $storage    Cache storage
+     */
     
     public function __construct(StorageInterface $storage)
     {
         $this->storage = $storage;
     }
     
+    /**
+     * Read a value from cache
+     *
+     * @access  public
+     * 
+     * @param   string  $key    Cache key
+     *
+     * @return  mixed
+     */
+    
     public function read($key)
     {
         return $this->storage->read($key);
     }
   
+    /**
+     * Save in cache
+     *
+     * @access  public
+     * 
+     * @param   string  $key    Cache key
+     * @param   mixed   $value  The value that needs to be stored
+     * @param   int     $ttl    (optional) Time to life
+     *
+     * @return  boolean
+     */
+    
     public function write($key, $value, $ttl = 0)
     {
         return $this->storage->write($key, $value, $ttl);
     }
   
+    /**
+     * Delete from cache
+     *
+     * @access  public
+     * 
+     * @param   string  $key    Cache key
+     *
+     * @return  boolean
+     */
+    
     public function delete($key)
     {
         return $this->storage->delete($key);
     }
   
+    /**
+     * Check if cache exists for the specifed key
+     *
+     * @access  public
+     * 
+     * @param   string  $key    Cache key
+     *
+     * @return  boolean
+     */
+    
     public function has($key)
     {
         return $this->storage->has($key);
     }
   
+    /**
+     * Clear the cache
+     *
+     * @access  public
+     * 
+     * @return  boolean
+     */
+    
     public function clear()
     {
         return $this->storage->clear();
     }
+    
+    /**
+     * Read from cache. If the specified key doesn't exist or the cache expired, then store in cache
+     * the value obtained by invoking the given closure and then return the stored value
+     *
+     * @access  public
+     *
+     * @param   string      $key        Cache key
+     * @param   \Closure    $closure    Callback closure
+     * @param   int         $ttl        (optional) Time to life
+     *
+     * @return  mixed
+     */
     
     public function load($key, Closure $closure, $ttl = 0)
     {

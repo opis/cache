@@ -22,7 +22,7 @@ namespace Opis\Cache;
 
 use Closure;
 
-class Cache implements StorageInterface
+class Cache
 {
     
     protected $storage;
@@ -30,11 +30,6 @@ class Cache implements StorageInterface
     public function __construct(StorageInterface $storage)
     {
         $this->storage = $storage;
-    }
-    
-    public function __call($name, $arguments)
-    {
-        return call_user_func_array(array($this->storage, $name), $arguments);
     }
     
     public function read($key)
@@ -68,7 +63,7 @@ class Cache implements StorageInterface
         {
             return $this->storage->read($key);
         }
-        $value = $closure();
+        $value = $closure($key);
         $this->storage->write($key, $value, $ttl);
         return $value;
     }

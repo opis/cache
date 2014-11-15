@@ -2,7 +2,7 @@
     "name": "opis/cache",
     "description": "A caching library, with support for multiple backend storages, that provides developers an API which allows them to deal with cached content in a standardised way, no matter where that content is stored. ",
     "keywords": ["cache", "caching", "file", "redis", "database", "apc"],
-    "homepage": "http://opis.io",
+    "homepage": "http://www.opis.io/cache",
     "license": "Apache-2.0",
     "authors": [
         {

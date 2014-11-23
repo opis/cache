@@ -1,5 +1,9 @@
 CHANGELOG
 -----------
+### Opis Cache 2.1.0, 2014.11.22
+
+* Updated `predis/predis` library dependency to version `1.0.*`
+
 ### Opis Cache 2.0.0, 2014.11.15
 
 * `Opis\Cache\Cache` class no longer implement `Opis\Cache\StorageInterface` interface

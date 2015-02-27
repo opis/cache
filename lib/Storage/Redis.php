@@ -104,7 +104,7 @@ class Redis implements StorageInterface
     
     public function delete($key)
     {
-        return (bool) $this->redis->exists($this->prefix . $key);
+        return (bool) $this->redis->del($this->prefix . $key);
     }
     
     /**

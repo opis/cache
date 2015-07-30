@@ -1,5 +1,9 @@
 CHANGELOG
 -----------
+### Opis Cache 2.2.0
+
+* Updated `opis/closure` library dependency to version `~2.0.*`
+
 ### Opis Cache 2.1.0, 2014.11.22
 
 * Updated `predis/predis` library dependency to version `1.0.*`

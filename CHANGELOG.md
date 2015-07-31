@@ -1,6 +1,6 @@
 CHANGELOG
 -----------
-### Opis Cache 2.2.0, 2015.07.31
+### Opis Cache 2.3.0
 
 * Updated `opis/database` library dependency to version `^2.1.1`
 * Updated `opis/closure` library dependency to version `^2.0.0`

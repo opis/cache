@@ -20,8 +20,8 @@ The currently supported storages are: APC, APCU, Database, File, Memory, Memcach
 ### Requirements
 
 * PHP 5.3.* or higher
-* [Opis Closure](http://www.opis.io/closure) ~2.0
-* [Opis Database](http://www.opis.io/database) 2.0.* (for Database storage)
+* [Opis Closure](http://www.opis.io/closure) ^2.0.0
+* [Opis Database](http://www.opis.io/database) ^2.1.1 (for Database storage)
 * [Predis](https://github.com/nrk/predis) 1.0.* (for Redis storage)
 
 ### Installation
@@ -31,18 +31,18 @@ This library is available on [Packagist](https://packagist.org/packages/opis/cac
 ```json
 {
     "require": {
-        "opis/cache": "2.2.*"
+        "opis/cache": "^2.3.0"
     }
 }
 ```
 
 If you are unable to use [Composer](http://getcomposer.org) you can download the
-[tar.gz](https://github.com/opis/cache/archive/2.2.0.tar.gz) or the [zip](https://github.com/opis/cache/archive/2.2.0.zip)
+[tar.gz](https://github.com/opis/cache/archive/2.3.0.tar.gz) or the [zip](https://github.com/opis/cache/archive/2.3.0.zip)
 archive file, extract the content of the archive and include de `autoload.php` file into your project. 
 
 ```php
 
-require_once 'path/to/cache-2.2.0/autoload.php';
+require_once 'path/to/cache-2.3.0/autoload.php';
 
 ```
 

@@ -2,6 +2,12 @@ CHANGELOG
 -----------
 ### Opis Cache 2.2.0, 2015.07.31
 
+* Updated `opis/database` library dependency to version `^2.1.1`
+* Updated `opis/closure` library dependency to version `^2.0.0`
+* Removed branch alias
+
+### Opis Cache 2.2.0, 2015.07.31
+
 * Updated `opis/closure` library dependency to version `~2.0.*`
 
 ### Opis Cache 2.1.0, 2014.11.22

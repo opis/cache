@@ -1,5 +1,14 @@
 CHANGELOG
 -----------
+### Opis Cache 2.3.1, 2015.08.27
+
+* Modified `write`, `read` and `has` methods in `Database` storage
+* Modified `write`, `read` and `has` methods in `File` storage
+* Modified `write`, `read` and `has` methods in `Memory` storage
+* Modified `write`, `read` and `has` methods in `Mongo` storage
+* Modified `write`, `read` and `has` methods in `PHPFile` storage
+* Modified `write`, `read` and `has` methods in `Proxy` storage
+
 ### Opis Cache 2.3.0, 2015.07.31
 
 * Updated `opis/database` library dependency to version `^2.1.1`

@@ -73,7 +73,7 @@ class Database implements StorageInterface
     
     public function write($key, $value, $ttl = 0)
     {
-        $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
+        $ttl = ((int) $ttl <= 0) ? 0 : ((int) $ttl + time());
         
         try
         {
@@ -104,6 +104,7 @@ class Database implements StorageInterface
     
     public function read($key)
     {
+        
         try
         {
             $cache = $this->db->from($this->table)
@@ -111,29 +112,25 @@ class Database implements StorageInterface
                               ->select()
                               ->fetchAssoc()
                               ->first();
-                        
-            if($cache !== false)
-            {
-                if(time() < $cache[$this->columns['ttl']])
-                {
-                    return unserialize($cache[$this->columns['data']]);
-                }
-                else
-                {
-                    $this->delete($key);
-                    
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
         }
         catch(PDOException $e)
         {
             return false;
         }
+        
+        if($cache !== false)
+        {
+            $expire = (int) $cache[$this->columns['ttl']];
+            
+            if($expire === 0 || time() < $expire)
+            {
+                return unserialize($cache[$this->columns['data']]);
+            }
+            
+            $this->delete($key);
+        }
+        
+        return false;
     }
     
     /**
@@ -148,9 +145,14 @@ class Database implements StorageInterface
     {
         try
         {
+            $ttlColumn = $this->columns['ttl'];
+            
             return (bool) $this->db->from($this->table)
                                    ->where($this->columns['key'])->eq($this->prefix . $key)
-                                   ->andWhere($this->columns['ttl'])->gt(time())
+                                   ->andWhere(function($group) use($ttlColumn){
+                                        $group->where($ttlColumn)->eq(0)
+                                              ->orWhere($ttlColumn)->gt(time());
+                                   })
                                    ->count();
         }
         catch(PDOException $e)
@@ -193,13 +195,13 @@ class Database implements StorageInterface
         try
         {
             $this->db->from($this->table)->delete();
-            
-            return true;
         }
         catch(PDOException $e)
         {
             return false;
         }
+        
+        return true;
     }
     
 }

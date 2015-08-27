@@ -49,11 +49,13 @@ class Proxy implements StorageInterface
     
     public function write($key, $value, $ttl = 0)
     {
-        $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
-        
         if($this->proxy->write($key, $value, $ttl))
         {
-            $this->cache[$key] = $value;
+            $this->cache[$key] = array(
+                'value' => $value,
+                'ttl' => $ttl,
+            );
+            
             return true;
         }
         
@@ -70,12 +72,21 @@ class Proxy implements StorageInterface
     
     public function read($key)
     {
-        if(!isset($this->cache[$key]))
+        if(isset($this->cache[$key]))
         {
-            return $this->cache[$key]  = $this->proxy->read($key);
+            $cache = $this->cache[$key];
+            $expire = (int) $cache['ttl'];
+            
+            if($expire === 0 || $expire < time())
+            {
+                return $cache['value'];
+            }
+            
+            $this->delete($key);
+            return false;
         }
         
-        return $this->cache[$key];
+        return $this->proxy->read($key);
     }
     
     /**
@@ -88,7 +99,15 @@ class Proxy implements StorageInterface
     
     public function has($key)
     {
-        return (isset($this->cache[$key]) || $this->proxy->has($key));
+        if(isset($this->cache[$key]))
+        {
+            $cache = $this->cache[$key];
+            $expire = (int) $cache['ttl'];
+            
+            return $expire === 0 || $expire < time();
+        }
+        
+        return $this->proxy->has($key);
     }
     
     

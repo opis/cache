@@ -40,8 +40,8 @@ class Memory implements StorageInterface
     
     public function write($key, $value, $ttl = 0)
     {
-        $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
-    
+        $ttl = ((int) $ttl <= 0) ? 0 : ((int) $ttl + time());
+        
         $this->cache[$key] = array('data' => $value, 'ttl' => $ttl);
         
         return true;
@@ -59,21 +59,18 @@ class Memory implements StorageInterface
     {
         if(isset($this->cache[$key]))
         {
-            if($this->cache[$key]['ttl'] > time())
+            $expire = (int) $this->cache[$key]['ttl'];
+            
+            if($expire === 0 || time() < $expire)
             {
                 return $this->cache[$key]['data'];
             }
-            else
-            {
-                $this->delete($key);
-    
-                return false;
-            }
-        }
-        else
-        {
+            
+            $this->delete($key);
             return false;
         }
+        
+        return false;
     }
     
     /**
@@ -86,7 +83,13 @@ class Memory implements StorageInterface
     
     public function has($key)
     {
-        return (isset($this->cache[$key]) && $this->cache[$key]['ttl'] > time());
+        if(isset($this->cache[$key]))
+        {
+            $expire = (int) $this->cache[$key]['ttl'];
+            return $expire === 0 || time() < $expire;
+        }
+        
+        return false;
     }
     
     
@@ -103,13 +106,10 @@ class Memory implements StorageInterface
         if(isset($this->cache[$key]))
         {
             unset($this->cache[$key]);
-            
             return true;
         }
-        else
-        {
-            return false;
-        }
+            
+        return false;
     }
     
     /**

@@ -86,7 +86,7 @@ class File implements StorageInterface
     
     public function write($key, $value, $ttl = 0)
     {
-        $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
+        $ttl = ((int) $ttl <= 0) ? 0 : ((int) $ttl + time());
         
         $data = "{$ttl}\n" . serialize($value);
         
@@ -108,30 +108,24 @@ class File implements StorageInterface
             // Cache exists
             
             $handle = fopen($this->cacheFile($key), 'r');
-    
-            if(time() < (int) trim(fgets($handle)))
+            
+            $expire = (int) trim(fgets($handle));
+            
+            if($expire === 0 || time() < $expire)
             {
                 $cache = '';
-    
                 while(!feof($handle))
                 {
                     $cache .= fgets($handle);
                 }
-    
                 fclose($handle);
-    
                 return unserialize($cache);
             }
-            else
-            {
-    
-                fclose($handle);
-    
-                unlink($this->cacheFile($key));
-    
-                return false;
-            }
+            
+            fclose($handle);
+            unlink($this->cacheFile($key));
         }
+        
         return false;
     }
     
@@ -149,13 +143,13 @@ class File implements StorageInterface
         {
             $handle = fopen($this->cacheFile($key), 'r');
             
-            $expired = (time() < (int) trim(fgets($handle)));
+            $expire = (int) trim(fgets($handle));
             
             fclose($handle);
             
-            return $expired;
+            return $expire === 0 || time() < $expire;
         }
-    
+        
         return false;
     }
     
@@ -174,7 +168,7 @@ class File implements StorageInterface
         {
             return unlink($this->cacheFile($key));
         }
-    
+        
         return false;
     }
     

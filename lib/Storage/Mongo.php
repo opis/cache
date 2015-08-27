@@ -48,9 +48,9 @@ class Mongo implements StorageInterface
     
     public function write($key, $value, $ttl = 0)
     {
-        $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
+        $ttl = ((int) $ttl <= 0) ? 0 : ((int) $ttl + time());
         
-        $this->mongo->save(array('_id' => $key, 'data' => $value, 'lifetime' => $ttl));
+        $this->mongo->save(array('_id' => $key, 'data' => serialize($value), 'lifetime' => $ttl));
         
         return true;
     }
@@ -65,9 +65,21 @@ class Mongo implements StorageInterface
     
     public function read($key)
     {
-        $result = $this->mongo->findOne(array('_id' => $id), array('data'));
+        $result = $this->mongo->findOne(array('_id' => $id), array('data', 'lifetime'));
         
-        return $result === null ? false : $result['data'];
+        if($result !== null)
+        {
+            $expire = (int) $result['lifetime'];
+            
+            if($expire === 0 || time() < $expire)
+            {
+                return unserialize($result['data']);
+            }
+            
+            $this->delete($key);
+        }
+        
+        return false;
     }
     
     /**
@@ -80,7 +92,15 @@ class Mongo implements StorageInterface
     
     public function has($key)
     {
-        return null !== $this->mongo->findOne(array('_id' => $id));
+        $result = $this->mongo->findOne(array('_id' => $id), array('lifetime'));
+        
+        if($result !== null)
+        {
+            $expire = (int) $result['lifetime'];
+            return $expire === 0 || time() < $expire;
+        }
+        
+        return false;
     }
     
     /**

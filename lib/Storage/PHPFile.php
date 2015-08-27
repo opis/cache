@@ -83,7 +83,7 @@ class PHPFile implements StorageInterface
     
     public function write($key, $value, $ttl = 0)
     {
-        $ttl = (((int) $ttl === 0) ? 31556926 : (int) $ttl) + time();
+        $ttl = ((int) $ttl <= 0) ? 0 : ((int) $ttl + time());
         
         $data = "<?php\n\rreturn " . preg_replace('/\s=>\s(\n\s+)array\s\(\n/', " => array (\n", var_export(array('ttl'=> $ttl, 'data' => serialize($value)), true)) . ';';
         
@@ -108,15 +108,14 @@ class PHPFile implements StorageInterface
             
             $data = include $file;
             
-            if(time() < $data['ttl'])
+            $expire = (int) $data['ttl'];
+            
+            if($expire === 0 || time() < $expire)
             {
                 return unserialize($data['data']);
             }
-            else
-            {
-                unlink($file);
-                return false;
-            }
+                
+            unlink($file);
         }
         
         return false;
@@ -137,8 +136,9 @@ class PHPFile implements StorageInterface
         if(file_exists($file))
         {
             $data = include $file;
+            $expire = (int) $data['ttl'];
             
-            return time() < $data['ttl'];
+            return $expire === 0 || time() < $expire;
         }
         
         return false;

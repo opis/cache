@@ -69,10 +69,6 @@ class Memcached implements StorageInterface
         $this->memcached = null;
     }
     
-    //---------------------------------------------
-    // Class methods
-    //---------------------------------------------
-    
     /**
      * Store variable in the cache.
      *

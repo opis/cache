@@ -15,7 +15,7 @@ The currently supported storages are: APC, APCU, File, Memory, Memcache, Memcach
 
 ##### Important!
 
-You can install additional storages(SQL databases and Redis) by using the optional [Opis Storages](https://github.com/opis/storages) package.
+You can install additional storage adapters, for SQL databases and Redis, by using the optional [Opis Storages](https://github.com/opis/storages) package.
 
 ### License
 

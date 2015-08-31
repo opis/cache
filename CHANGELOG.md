@@ -1,5 +1,12 @@
 CHANGELOG
 -----------
+### Opis Cache 3.0.0, 2015.08.31
+
+* Removed `Opis\Cache\StorageCollection` class
+* `Opis\Cache\Storage\Database` and `Opis\Cache\Storage\Redis` classes were moved into the
+`opis/storages` package
+* Removed `opis\database`, `opis\closure` and `predis\predis` dependencies.
+
 ### Opis Cache 2.3.1, 2015.08.27
 
 * Modified `write`, `read` and `has` methods in `Database` storage

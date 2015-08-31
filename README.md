@@ -11,7 +11,10 @@ them to deal with cached content in a standardised way, no matter where that con
 simple and effective architecture, ensures that support for new backend storages can be easily achieved
 by simply implementing an interface.
 
-The currently supported storages are: APC, APCU, Database, File, Memory, Memcache, Memcached, MongoDB, Proxy, Redis, WinCache, XCache, ZendCache and ZendMemory.
+The currently supported storages are: APC, APCU, File, Memory, Memcache, Memcached, MongoDB, Proxy, WinCache, XCache, ZendCache and ZendMemory.
+
+Support for SQL databases or Redis storages can be added by using the optional [Opis Storages](https://github.com/opis/storages)
+package.
 
 ### License
 
@@ -20,9 +23,6 @@ The currently supported storages are: APC, APCU, Database, File, Memory, Memcach
 ### Requirements
 
 * PHP 5.3.* or higher
-* [Opis Closure](http://www.opis.io/closure) ^2.0.0
-* [Opis Database](http://www.opis.io/database) ^2.1.1 (for Database storage)
-* [Predis](https://github.com/nrk/predis) 1.0.* (for Redis storage)
 
 ### Installation
 
@@ -31,18 +31,18 @@ This library is available on [Packagist](https://packagist.org/packages/opis/cac
 ```json
 {
     "require": {
-        "opis/cache": "2.3.*"
+        "opis/cache": "^3.0.*"
     }
 }
 ```
 
 If you are unable to use [Composer](http://getcomposer.org) you can download the
-[tar.gz](https://github.com/opis/cache/archive/2.3.1.tar.gz) or the [zip](https://github.com/opis/cache/archive/2.3.1.zip)
+[tar.gz](https://github.com/opis/cache/archive/3.0.0.tar.gz) or the [zip](https://github.com/opis/cache/archive/3.0.0.zip)
 archive file, extract the content of the archive and include de `autoload.php` file into your project. 
 
 ```php
 
-require_once 'path/to/cache-2.3.1/autoload.php';
+require_once 'path/to/cache-3.0.0/autoload.php';
 
 ```
 

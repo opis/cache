@@ -14,8 +14,8 @@ by simply implementing an interface.
 The currently supported storages are: APC, APCU, File, Memory, Memcache, Memcached, MongoDB, Proxy, WinCache, XCache, ZendCache and ZendMemory.
 
 ##### Important!
-Support for additional storages(SQL databases and Redis) can be accomplished by using the optional [Opis Storages](https://github.com/opis/storages)
-package.
+
+You can install additional storages(SQL databases and Redis) by using the optional [Opis Storages](https://github.com/opis/storages) package.
 
 ### License
 

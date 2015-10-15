@@ -45,15 +45,27 @@ class PHPFile implements StorageInterface
     public function __construct($path, $prefix = '', $extension = 'php')
     {
         $this->path = rtrim($path, '/');
-        $prefix = trim($prefix, '.');
-        $extension = trim($extension, '.');
+        $this->prefix = trim($prefix, '.');
+        $this->extension = trim($extension, '.');
         
-        $this->prefix = $prefix === '' ? '' : $prefix . '.';
-        $this->extension = $extension === '' ? '' : '.' . $extension;
-        
-        if(file_exists($this->path) === false || is_readable($this->path) === false || is_writable($this->path) === false)
+        if($this->prefix !== '')
         {
-            throw new RuntimeException(vsprintf("%s(): Cache directory ('%s') is not writable.", array(__METHOD__, $this->path)));
+            $this->prefix .= '.'; 
+        }
+        
+        if($this->extension !== '')
+        {
+            $this->extension = '.' . $this->extension;
+        }
+        
+        if(!is_dir($this->path) && !@mkdir($this->path, 0775, true))
+        {
+            throw new RuntimeException(vsprintf("Cache directory ('%s') does not exist.", array($this->path)));
+        }
+        
+        if(!is_writable($this->path) || !is_readable($this->path))
+        {
+            throw new RuntimeException(vsprintf("Cache directory ('%s') is not writable or readable.", array($this->path)));
         }
     }
     
@@ -72,6 +84,27 @@ class PHPFile implements StorageInterface
     }
     
     /**
+     * Write on file
+     *
+     * @access  public
+     *
+     * @param   string  &$file  File path
+     * @param   string  &$data  Content
+     */
+    
+    protected function fileWrite(&$file, &$data)
+    {
+        $fh = fopen($file, 'c');
+        flock($fh, LOCK_EX);
+        chmod($file, 0774);
+        ftruncate($fh, 0);
+        fwrite($fh, $data);
+        flock($fh, LOCK_UN);
+        fclose($fh);
+        return true;
+    }
+    
+    /**
      * Store variable in the cache.
      *
      * @access  public
@@ -84,10 +117,10 @@ class PHPFile implements StorageInterface
     public function write($key, $value, $ttl = 0)
     {
         $ttl = ((int) $ttl <= 0) ? 0 : ((int) $ttl + time());
-        
+        $file = $this->cacheFile($key);
         $data = "<?php\n\rreturn " . preg_replace('/\s=>\s(\n\s+)array\s\(\n/', " => array (\n", var_export(array('ttl'=> $ttl, 'data' => serialize($value)), true)) . ';';
         
-        return is_int(file_put_contents($this->cacheFile($key), $data, LOCK_EX));
+        return $this->fileWrite($file, $data);
     }
     
     /**

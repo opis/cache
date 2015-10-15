@@ -1,5 +1,13 @@
 CHANGELOG
 -----------
+### v3.1.0, 2015.10.15
+
+* Changed the way `File` and `PHPFile` storages behaves when the specified directory doesn't exits and now
+they try to create it first, before throwing an exception.
+* Added `Opis\Cache\Storage\File::fileWrite` protected method
+* Added `Opis\Cache\Storage\PHPFile::fileWrite` protected method
+* Other minor improvements
+
 ### v3.0.0, 2015.08.31
 
 * Removed `Opis\Cache\StorageCollection` class

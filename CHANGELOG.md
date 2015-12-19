@@ -1,5 +1,10 @@
 CHANGELOG
 -----------
+### v3.1.1, 2015.12.19
+
+* Fixed CS
+* Fixed some minor bugs
+
 ### v3.1.0, 2015.10.15
 
 * Changed the way `File` and `PHPFile` storages behaves when the specified directory doesn't exits and now

@@ -21,7 +21,6 @@
 namespace Opis\Cache\Storage;
 
 use \Memcache as PHP_Memcache;
-use RuntimeException;
 use Opis\Cache\StorageInterface;
 
 class Memcache implements StorageInterface

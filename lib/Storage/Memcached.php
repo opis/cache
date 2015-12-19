@@ -20,7 +20,6 @@
 
 namespace Opis\Cache\Storage;
 
-use RuntimeException;
 use \Memcached as PHP_Memcached;
 use Opis\Cache\StorageInterface;
 

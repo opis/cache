@@ -20,9 +20,8 @@
 
 namespace Opis\Cache\Storage;
 
-use PDOException;
-use Opis\Cache\StorageInterface;
 use MongoCollection;
+use Opis\Cache\StorageInterface;
 
 class Mongo implements StorageInterface
 {

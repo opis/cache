@@ -28,7 +28,12 @@ class Mongo implements StorageInterface
 {
     /** @var    \MongoCollectio Collection. */
     protected $mongo;
-
+    
+    /**
+     * Constructor
+     * 
+     * @param   MongoCollection $mongo  MongoCollection object
+     */
     public function __construct(MongoCollection $mongo)
     {
         $this->mongo = $mongo;
@@ -37,10 +42,10 @@ class Mongo implements StorageInterface
     /**
      * Store variable in the cache.
      *
-     * @access  public
      * @param   string   $key    Cache key
      * @param   mixed    $value  The variable to store
      * @param   int      $ttl    (optional) Time to live
+     * 
      * @return  boolean
      */
     public function write($key, $value, $ttl = 0)
@@ -55,8 +60,8 @@ class Mongo implements StorageInterface
     /**
      * Fetch variable from the cache.
      *
-     * @access  public
      * @param   string  $key  Cache key
+     * 
      * @return  mixed
      */
     public function read($key)
@@ -79,8 +84,8 @@ class Mongo implements StorageInterface
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function has($key)
@@ -98,8 +103,8 @@ class Mongo implements StorageInterface
     /**
      * Delete a variable from the cache.
      *
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function delete($key)
@@ -111,7 +116,6 @@ class Mongo implements StorageInterface
     /**
      * Clears the user cache.
      *
-     * @access  public
      * @return  boolean
      */
     public function clear()

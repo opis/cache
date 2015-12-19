@@ -25,19 +25,21 @@ use Opis\Cache\StorageInterface;
 
 class File implements StorageInterface
 {
-    /** @var	string	Cache path. */
+    /** @var    string */
     protected $path;
+
+    /** @var    string */
     protected $prefix;
+
+    /** @var    string */
     protected $extension;
 
     /**
      * Constructor.
      *
-     * @access  public
-     * 
      * @param   string  $path       Path
-     * @param   string  $prefix     Prefix
-     * @param   string  $extension  File extension
+     * @param   string  $prefix     (optional) Cache key prefix
+     * @param   string  $extension  (optional) File extension
      */
     public function __construct($path, $prefix = '', $extension = 'cache')
     {
@@ -65,8 +67,8 @@ class File implements StorageInterface
     /**
      * Returns the path to the cache file.
      * 
-     * @access  public
      * @param   string  $key  Cache key
+     * 
      * @return  string
      */
     protected function cacheFile($key)
@@ -77,10 +79,10 @@ class File implements StorageInterface
     /**
      * Write on file
      *
-     * @access  public
-     *
      * @param   string  &$file  File path
      * @param   string  &$data  Content
+     * 
+     * @return  true
      */
     protected function fileWrite(&$file, &$data)
     {
@@ -97,10 +99,10 @@ class File implements StorageInterface
     /**
      * Store variable in the cache.
      *
-     * @access  public
      * @param   string   $key    Cache key
      * @param   mixed    $value  The variable to store
      * @param   int      $ttl    (optional) Time to live
+     * 
      * @return  boolean
      */
     public function write($key, $value, $ttl = 0)
@@ -115,8 +117,8 @@ class File implements StorageInterface
     /**
      * Fetch variable from the cache.
      *
-     * @access  public
      * @param   string  $key  Cache key
+     * 
      * @return  mixed
      */
     public function read($key)
@@ -147,8 +149,8 @@ class File implements StorageInterface
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function has($key)
@@ -171,8 +173,8 @@ class File implements StorageInterface
     /**
      * Delete a variable from the cache.
      *
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function delete($key)
@@ -189,7 +191,6 @@ class File implements StorageInterface
     /**
      * Clears the user cache.
      *
-     * @access  public
      * @return  boolean
      */
     public function clear()

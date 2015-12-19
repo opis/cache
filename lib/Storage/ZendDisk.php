@@ -25,13 +25,14 @@ use Opis\Cache\StorageInterface;
 
 class ZendDisk implements StorageInterface
 {
+    /** @var    string */
     protected $prefix;
 
     /**
      * Constructor.
      *
      * @access  public
-     * @param   string  $identifier Cache identifier
+     * @param   string  $prefix (optional) Cache key prefix
      */
     public function __construct($prefix = '')
     {
@@ -45,10 +46,10 @@ class ZendDisk implements StorageInterface
     /**
      * Store variable in the cache.
      *
-     * @access  public
      * @param   string   $key    Cache key
      * @param   mixed    $value  The variable to store
      * @param   int      $ttl    (optional) Time to live
+     * 
      * @return  boolean
      */
     public function write($key, $value, $ttl = 0)
@@ -59,8 +60,8 @@ class ZendDisk implements StorageInterface
     /**
      * Fetch variable from the cache.
      *
-     * @access  public
      * @param   string  $key  Cache key
+     * 
      * @return  mixed
      */
     public function read($key)
@@ -71,8 +72,8 @@ class ZendDisk implements StorageInterface
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function has($key)
@@ -83,8 +84,8 @@ class ZendDisk implements StorageInterface
     /**
      * Delete a variable from the cache.
      *
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function delete($key)
@@ -95,7 +96,6 @@ class ZendDisk implements StorageInterface
     /**
      * Clears the user cache.
      *
-     * @access  public
      * @return  boolean
      */
     public function clear()

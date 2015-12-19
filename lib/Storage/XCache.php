@@ -25,28 +25,21 @@ use Opis\Cache\StorageInterface;
 
 class XCache implements StorageInterface
 {
-    /**
-     * XCache username.
-     *
-     * @var string
-     */
+    /** @var    string  XCache username */
     protected $username;
 
-    /**
-     * XCache password.
-     *
-     * @var string
-     */
+    /** @var    string  XCache password */
     protected $password;
+
+    /** @var    string */
     protected $prefix;
 
     /**
      * Constructor.
      *
-     * @access  public
-     * @param   string  $identifier Cache identifier
      * @param   string  $username   Username
      * @param   string  $password   Password
+     * @param   string  $prefix     (optional) Cache key prefix
      */
     public function __construct($username, $password, $prefix = '')
     {
@@ -64,10 +57,10 @@ class XCache implements StorageInterface
     /**
      * Store variable in the cache.
      *
-     * @access  public
      * @param   string   $key    Cache key
      * @param   mixed    $value  The variable to store
      * @param   int      $ttl    (optional) Time to live
+     * 
      * @return  boolean
      */
     public function write($key, $value, $ttl = 0)
@@ -78,8 +71,8 @@ class XCache implements StorageInterface
     /**
      * Fetch variable from the cache.
      *
-     * @access  public
      * @param   string  $key  Cache key
+     * 
      * @return  mixed
      */
     public function read($key)
@@ -90,8 +83,8 @@ class XCache implements StorageInterface
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function has($key)
@@ -102,8 +95,8 @@ class XCache implements StorageInterface
     /**
      * Delete a variable from the cache.
      *
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function delete($key)
@@ -114,7 +107,6 @@ class XCache implements StorageInterface
     /**
      * Clears the user cache.
      *
-     * @access  public
      * @return  boolean
      */
     public function clear()

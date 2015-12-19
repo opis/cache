@@ -30,8 +30,6 @@ class Cache
     /**
      * Constructor
      *
-     * @access  public
-     * 
      * @param   \Opis\Cache\StorageInterface    $storage    Cache storage
      */
     public function __construct(StorageInterface $storage)
@@ -42,8 +40,6 @@ class Cache
     /**
      * Read a value from cache
      *
-     * @access  public
-     * 
      * @param   string  $key    Cache key
      *
      * @return  mixed
@@ -56,8 +52,6 @@ class Cache
     /**
      * Save in cache
      *
-     * @access  public
-     * 
      * @param   string  $key    Cache key
      * @param   mixed   $value  The value that needs to be stored
      * @param   int     $ttl    (optional) Time to life
@@ -72,8 +66,6 @@ class Cache
     /**
      * Delete from cache
      *
-     * @access  public
-     * 
      * @param   string  $key    Cache key
      *
      * @return  boolean
@@ -86,8 +78,6 @@ class Cache
     /**
      * Check if cache exists for the specifed key
      *
-     * @access  public
-     * 
      * @param   string  $key    Cache key
      *
      * @return  boolean
@@ -100,8 +90,6 @@ class Cache
     /**
      * Clear the cache
      *
-     * @access  public
-     * 
      * @return  boolean
      */
     public function clear()
@@ -112,8 +100,6 @@ class Cache
     /**
      * Read from cache. If the specified key doesn't exist or the cache expired, then store in cache
      * the value obtained by invoking the given closure and then return the stored value
-     *
-     * @access  public
      *
      * @param   string      $key        Cache key
      * @param   \Closure    $closure    Callback closure

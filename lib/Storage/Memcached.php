@@ -28,6 +28,8 @@ class Memcached implements StorageInterface
 {
     /** @var    \Memcached  Memcached object. */
     protected $memcached;
+
+    /** @var    string */
     protected $prefix;
 
     /**
@@ -35,6 +37,7 @@ class Memcached implements StorageInterface
      *
      * @access  public
      * @param	\Memcahed	$memcached 	Memcached instance
+     * @param   string      $prefix     (optional) Cache key prefix
      * @param	boolean		$compress	(optional) Compress
      * @param	int			$timeout	(optional) Timeout seconds
      */
@@ -56,7 +59,6 @@ class Memcached implements StorageInterface
     /**
      * Destructor.
      *
-     * @access  public
      */
     public function __destruct()
     {
@@ -66,10 +68,10 @@ class Memcached implements StorageInterface
     /**
      * Store variable in the cache.
      *
-     * @access  public
      * @param   string   $key    Cache key
      * @param   mixed    $value  The variable to store
      * @param   int      $ttl    (optional) Time to live
+     * 
      * @return  boolean
      */
     public function write($key, $value, $ttl = 0)
@@ -88,8 +90,8 @@ class Memcached implements StorageInterface
     /**
      * Fetch variable from the cache.
      *
-     * @access  public
      * @param   string  $key  Cache key
+     * 
      * @return  mixed
      */
     public function read($key)
@@ -100,8 +102,8 @@ class Memcached implements StorageInterface
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function has($key)
@@ -112,8 +114,8 @@ class Memcached implements StorageInterface
     /**
      * Delete a variable from the cache.
      *
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function delete($key)
@@ -124,7 +126,6 @@ class Memcached implements StorageInterface
     /**
      * Clears the user cache.
      *
-     * @access  public
      * @return  boolean
      */
     public function clear()

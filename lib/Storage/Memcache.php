@@ -29,17 +29,18 @@ class Memcache implements StorageInterface
     /** @var	\Memcache	Memcache object. */
     protected $memcache;
 
-    /** @var	int	Compression level. */
+    /** @var	int         Compression level. */
     protected $compression = 0;
+
+    /** @var    string */
     protected $prefix;
 
     /**
      * Constructor.
      *
-     * @access  public
-     * @param   string		$identifier	Cache identifier
-     * @param	\Memcache	$memcache	Memcache instance
-     * @param	boolean		$compress	Compress data
+     * @param   \Memcache   $memcache	Memcache instance
+     * @param	string      $prefix     (optional) Cache key prefix
+     * @param	boolean		$compress	(optional) Compress data
      */
     public function __construct(PHP_Memcache $memcache, $prefix = '', $compress = true)
     {
@@ -53,7 +54,6 @@ class Memcache implements StorageInterface
     /**
      * Destructor.
      *
-     * @access  public
      */
     public function __destruct()
     {
@@ -65,10 +65,10 @@ class Memcache implements StorageInterface
     /**
      * Store variable in the cache.
      *
-     * @access  public
      * @param   string   $key    Cache key
      * @param   mixed    $value  The variable to store
      * @param   int      $ttl    (optional) Time to live
+     * 
      * @return  boolean
      */
     public function write($key, $value, $ttl = 0)
@@ -87,8 +87,8 @@ class Memcache implements StorageInterface
     /**
      * Fetch variable from the cache.
      *
-     * @access  public
      * @param   string  $key  Cache key
+     * 
      * @return  mixed
      */
     public function read($key)
@@ -99,8 +99,8 @@ class Memcache implements StorageInterface
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function has($key)
@@ -111,8 +111,8 @@ class Memcache implements StorageInterface
     /**
      * Delete a variable from the cache.
      *
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function delete($key)
@@ -123,7 +123,6 @@ class Memcache implements StorageInterface
     /**
      * Clears the user cache.
      *
-     * @access  public
      * @return  boolean
      */
     public function clear()

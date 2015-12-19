@@ -25,13 +25,13 @@ use Opis\Cache\StorageInterface;
 
 class WinCache implements StorageInterface
 {
+    /** @var    string */
     protected $prefix;
 
     /**
      * Constructor.
      *
-     * @access  public
-     * @param	string	$identifier	Cache identifier
+     * @param	string	$prefix (optional) Cache key prefix
      */
     public function __construct($prefix = '')
     {
@@ -45,10 +45,10 @@ class WinCache implements StorageInterface
     /**
      * Store variable in the cache.
      *
-     * @access  public
      * @param   string   $key    Cache key
      * @param   mixed    $valur  The variable to store
      * @param   int      $ttl    (optional) Time to live
+     * 
      * @return  boolean
      */
     public function write($key, $value, $ttl = 0)
@@ -59,8 +59,8 @@ class WinCache implements StorageInterface
     /**
      * Fetch variable from the cache.
      *
-     * @access  public
      * @param   string  $key  Cache key
+     * 
      * @return  mixed
      */
     public function read($key)
@@ -77,8 +77,8 @@ class WinCache implements StorageInterface
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function has($key)
@@ -89,8 +89,8 @@ class WinCache implements StorageInterface
     /**
      * Delete a variable from the cache.
      *
-     * @access  public
      * @param   string   $key  Cache key
+     * 
      * @return  boolean
      */
     public function delete($key)
@@ -101,7 +101,6 @@ class WinCache implements StorageInterface
     /**
      * Clears the user cache.
      *
-     * @access  public
      * @return  boolean
      */
     public function clear()

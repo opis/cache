@@ -25,25 +25,21 @@ use Opis\Cache\StorageInterface;
 
 class XCache implements StorageInterface
 {
-
     /**
      * XCache username.
      *
      * @var string
      */
-    
     protected $username;
-    
+
     /**
      * XCache password.
      *
      * @var string
      */
-    
     protected $password;
-    
     protected $prefix;
-    
+
     /**
      * Constructor.
      *
@@ -52,21 +48,19 @@ class XCache implements StorageInterface
      * @param   string  $username   Username
      * @param   string  $password   Password
      */
-    
     public function __construct($username, $password, $prefix = '')
     {
         $this->username = $username;
-        
+
         $this->password = $password;
-        
+
         $this->prefix = '';
-        
-        if(function_exists('xcache_get') === false)
-        {
+
+        if (function_exists('xcache_get') === false) {
             throw new RuntimeException(vsprintf("%s(): XCache is not available.", array(__METHOD__)));
         }
     }
-    
+
     /**
      * Store variable in the cache.
      *
@@ -76,12 +70,11 @@ class XCache implements StorageInterface
      * @param   int      $ttl    (optional) Time to live
      * @return  boolean
      */
-    
     public function write($key, $value, $ttl = 0)
     {
         return xcache_set($this->prefix . $key, serialize($value), $ttl);
     }
-    
+
     /**
      * Fetch variable from the cache.
      *
@@ -89,12 +82,11 @@ class XCache implements StorageInterface
      * @param   string  $key  Cache key
      * @return  mixed
      */
-    
     public function read($key)
     {
         return unserialize(xcache_get($this->prefix . $key));
     }
-    
+
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
@@ -102,13 +94,11 @@ class XCache implements StorageInterface
      * @param   string   $key  Cache key
      * @return  boolean
      */
-    
     public function has($key)
     {
         return xcache_isset($this->prefix . $key);
     }
-    
-    
+
     /**
      * Delete a variable from the cache.
      *
@@ -116,58 +106,48 @@ class XCache implements StorageInterface
      * @param   string   $key  Cache key
      * @return  boolean
      */
-    
     public function delete($key)
     {
         return xcache_unset($this->prefix . $key);
     }
-    
+
     /**
      * Clears the user cache.
      *
      * @access  public
      * @return  boolean
      */
-    
     public function clear()
     {
         $cleared = true;
-        
+
         $tempUsername = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : false;
         $tempPassword = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] : false;
-        
+
         $_SERVER['PHP_AUTH_USER'] = $this->username;
-        $_SERVER['PHP_AUTH_PW']   = $this->password;
-        
+        $_SERVER['PHP_AUTH_PW'] = $this->password;
+
         $cacheCount = xcache_count(XC_TYPE_VAR);
-        
-        for($i = 0; $i < $cacheCount; $i++)
-        {
-            if(@xcache_clear_cache(XC_TYPE_VAR, $i) === false)
-            {
+
+        for ($i = 0; $i < $cacheCount; $i++) {
+            if (@xcache_clear_cache(XC_TYPE_VAR, $i) === false) {
                 $cleared = false;
                 break;
             }
         }
-        
-        if($tempUsername !== false)
-        {
+
+        if ($tempUsername !== false) {
             $_SERVER['PHP_AUTH_USER'] = $tempUsername;
-        }
-        else
-        {
+        } else {
             unset($_SERVER['PHP_AUTH_USER']);
         }
-        
-        if($tempPassword !== false)
-        {
+
+        if ($tempPassword !== false) {
             $_SERVER['PHP_AUTH_PW'] = $tempPassword;
-        }
-        else
-        {
+        } else {
             unset($_SERVER['PHP_AUTH_PW']);
         }
-        
+
         return $cleared;
     }
 }

@@ -24,19 +24,17 @@ use Opis\Cache\StorageInterface;
 
 class Proxy implements StorageInterface
 {
-
     /** @var    array   Cached data. */
     protected $cache = array();
-    
+
     /** @var    StorageInterface    Proxy. */
     protected $proxy;
-    
-    
+
     public function __construct(StorageInterface $proxy)
     {
         $this->proxy = $proxy;
     }
-    
+
     /**
      * Store variable in the cache.
      *
@@ -46,22 +44,20 @@ class Proxy implements StorageInterface
      * @param   int      $ttl    (optional) Time to live
      * @return  boolean
      */
-    
     public function write($key, $value, $ttl = 0)
     {
-        if($this->proxy->write($key, $value, $ttl))
-        {
+        if ($this->proxy->write($key, $value, $ttl)) {
             $this->cache[$key] = array(
                 'value' => $value,
                 'ttl' => $ttl,
             );
-            
+
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Fetch variable from the cache.
      *
@@ -69,26 +65,23 @@ class Proxy implements StorageInterface
      * @param   string  $key  Cache key
      * @return  mixed
      */
-    
     public function read($key)
     {
-        if(isset($this->cache[$key]))
-        {
+        if (isset($this->cache[$key])) {
             $cache = $this->cache[$key];
             $expire = (int) $cache['ttl'];
-            
-            if($expire === 0 || $expire < time())
-            {
+
+            if ($expire === 0 || $expire < time()) {
                 return $cache['value'];
             }
-            
+
             $this->delete($key);
             return false;
         }
-        
+
         return $this->proxy->read($key);
     }
-    
+
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
@@ -96,21 +89,18 @@ class Proxy implements StorageInterface
      * @param   string   $key  Cache key
      * @return  boolean
      */
-    
     public function has($key)
     {
-        if(isset($this->cache[$key]))
-        {
+        if (isset($this->cache[$key])) {
             $cache = $this->cache[$key];
             $expire = (int) $cache['ttl'];
-            
+
             return $expire === 0 || $expire < time();
         }
-        
+
         return $this->proxy->has($key);
     }
-    
-    
+
     /**
      * Delete a variable from the cache.
      *
@@ -118,29 +108,25 @@ class Proxy implements StorageInterface
      * @param   string   $key  Cache key
      * @return  boolean
      */
-    
     public function delete($key)
     {
-        if($this->proxy->delete($key))
-        {
+        if ($this->proxy->delete($key)) {
             unset($this->cache[$key]);
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Clears the user cache.
      *
      * @access  public
      * @return  boolean
      */
-    
     public function clear()
     {
-        if($this->proxy->clear())
-        {
+        if ($this->proxy->clear()) {
             $this->cache = array();
             return true;
         }

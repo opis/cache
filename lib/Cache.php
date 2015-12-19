@@ -26,7 +26,7 @@ class Cache
 {
     /** @var    \Opis\Cache\StorageInterface    Cache storage */
     protected $storage;
-    
+
     /**
      * Constructor
      *
@@ -34,12 +34,11 @@ class Cache
      * 
      * @param   \Opis\Cache\StorageInterface    $storage    Cache storage
      */
-    
     public function __construct(StorageInterface $storage)
     {
         $this->storage = $storage;
     }
-    
+
     /**
      * Read a value from cache
      *
@@ -49,12 +48,11 @@ class Cache
      *
      * @return  mixed
      */
-    
     public function read($key)
     {
         return $this->storage->read($key);
     }
-  
+
     /**
      * Save in cache
      *
@@ -66,12 +64,11 @@ class Cache
      *
      * @return  boolean
      */
-    
     public function write($key, $value, $ttl = 0)
     {
         return $this->storage->write($key, $value, $ttl);
     }
-  
+
     /**
      * Delete from cache
      *
@@ -81,12 +78,11 @@ class Cache
      *
      * @return  boolean
      */
-    
     public function delete($key)
     {
         return $this->storage->delete($key);
     }
-  
+
     /**
      * Check if cache exists for the specifed key
      *
@@ -96,12 +92,11 @@ class Cache
      *
      * @return  boolean
      */
-    
     public function has($key)
     {
         return $this->storage->has($key);
     }
-  
+
     /**
      * Clear the cache
      *
@@ -109,12 +104,11 @@ class Cache
      * 
      * @return  boolean
      */
-    
     public function clear()
     {
         return $this->storage->clear();
     }
-    
+
     /**
      * Read from cache. If the specified key doesn't exist or the cache expired, then store in cache
      * the value obtained by invoking the given closure and then return the stored value
@@ -127,16 +121,13 @@ class Cache
      *
      * @return  mixed
      */
-    
     public function load($key, Closure $closure, $ttl = 0)
     {
-        if($this->storage->has($key))
-        {
+        if ($this->storage->has($key)) {
             return $this->storage->read($key);
         }
         $value = $closure($key);
         $this->storage->write($key, $value, $ttl);
         return $value;
     }
-    
 }

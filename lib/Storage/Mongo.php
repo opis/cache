@@ -24,18 +24,16 @@ use PDOException;
 use Opis\Cache\StorageInterface;
 use MongoCollection;
 
-
 class Mongo implements StorageInterface
 {
-    
-    /** @var    \MongoCollectio Collection.*/
+    /** @var    \MongoCollectio Collection. */
     protected $mongo;
-    
+
     public function __construct(MongoCollection $mongo)
     {
         $this->mongo = $mongo;
     }
-    
+
     /**
      * Store variable in the cache.
      *
@@ -45,16 +43,15 @@ class Mongo implements StorageInterface
      * @param   int      $ttl    (optional) Time to live
      * @return  boolean
      */
-    
     public function write($key, $value, $ttl = 0)
     {
         $ttl = ((int) $ttl <= 0) ? 0 : ((int) $ttl + time());
-        
+
         $this->mongo->save(array('_id' => $key, 'data' => serialize($value), 'lifetime' => $ttl));
-        
+
         return true;
     }
-    
+
     /**
      * Fetch variable from the cache.
      *
@@ -62,26 +59,23 @@ class Mongo implements StorageInterface
      * @param   string  $key  Cache key
      * @return  mixed
      */
-    
     public function read($key)
     {
         $result = $this->mongo->findOne(array('_id' => $id), array('data', 'lifetime'));
-        
-        if($result !== null)
-        {
+
+        if ($result !== null) {
             $expire = (int) $result['lifetime'];
-            
-            if($expire === 0 || time() < $expire)
-            {
+
+            if ($expire === 0 || time() < $expire) {
                 return unserialize($result['data']);
             }
-            
+
             $this->delete($key);
         }
-        
+
         return false;
     }
-    
+
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
@@ -89,20 +83,18 @@ class Mongo implements StorageInterface
      * @param   string   $key  Cache key
      * @return  boolean
      */
-    
     public function has($key)
     {
         $result = $this->mongo->findOne(array('_id' => $id), array('lifetime'));
-        
-        if($result !== null)
-        {
+
+        if ($result !== null) {
             $expire = (int) $result['lifetime'];
             return $expire === 0 || time() < $expire;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Delete a variable from the cache.
      *
@@ -110,24 +102,21 @@ class Mongo implements StorageInterface
      * @param   string   $key  Cache key
      * @return  boolean
      */
-    
     public function delete($key)
     {
         $this->mongo->remove(array('_id' => $key));
         return true;
     }
-    
+
     /**
      * Clears the user cache.
      *
      * @access  public
      * @return  boolean
      */
-    
     public function clear()
     {
         $this->mongo->deleteIndexes();
         return true;
     }
-    
 }

@@ -25,13 +25,10 @@ use Opis\Cache\StorageInterface;
 
 class PHPFile implements StorageInterface
 {
-
     protected $path;
-    
     protected $prefix;
-    
     protected $extension;
-    
+
     /**
      * Constructor.
      *
@@ -41,35 +38,29 @@ class PHPFile implements StorageInterface
      * @param	string	$prefix     Prefix
      * @param   string  $extension  File extension
      */
-    
     public function __construct($path, $prefix = '', $extension = 'php')
     {
         $this->path = rtrim($path, '/');
         $this->prefix = trim($prefix, '.');
         $this->extension = trim($extension, '.');
-        
-        if($this->prefix !== '')
-        {
-            $this->prefix .= '.'; 
+
+        if ($this->prefix !== '') {
+            $this->prefix .= '.';
         }
-        
-        if($this->extension !== '')
-        {
+
+        if ($this->extension !== '') {
             $this->extension = '.' . $this->extension;
         }
-        
-        if(!is_dir($this->path) && !@mkdir($this->path, 0775, true))
-        {
+
+        if (!is_dir($this->path) && !@mkdir($this->path, 0775, true)) {
             throw new RuntimeException(vsprintf("Cache directory ('%s') does not exist.", array($this->path)));
         }
-        
-        if(!is_writable($this->path) || !is_readable($this->path))
-        {
+
+        if (!is_writable($this->path) || !is_readable($this->path)) {
             throw new RuntimeException(vsprintf("Cache directory ('%s') is not writable or readable.", array($this->path)));
         }
     }
-    
-    
+
     /**
      * Returns the path to the cache file.
      * 
@@ -77,12 +68,11 @@ class PHPFile implements StorageInterface
      * @param   string  $key  Cache key
      * @return  string
      */
-    
     protected function cacheFile($key)
     {
         return $this->path . '/' . $this->prefix . $key . $this->extension;
     }
-    
+
     /**
      * Write on file
      *
@@ -91,7 +81,6 @@ class PHPFile implements StorageInterface
      * @param   string  &$file  File path
      * @param   string  &$data  Content
      */
-    
     protected function fileWrite(&$file, &$data)
     {
         $fh = fopen($file, 'c');
@@ -103,7 +92,7 @@ class PHPFile implements StorageInterface
         fclose($fh);
         return true;
     }
-    
+
     /**
      * Store variable in the cache.
      *
@@ -113,16 +102,15 @@ class PHPFile implements StorageInterface
      * @param   int      $ttl    (optional) Time to live
      * @return  boolean
      */
-    
     public function write($key, $value, $ttl = 0)
     {
         $ttl = ((int) $ttl <= 0) ? 0 : ((int) $ttl + time());
         $file = $this->cacheFile($key);
-        $data = "<?php\n\rreturn " . preg_replace('/\s=>\s(\n\s+)array\s\(\n/', " => array (\n", var_export(array('ttl'=> $ttl, 'data' => serialize($value)), true)) . ';';
-        
+        $data = "<?php\n\rreturn " . preg_replace('/\s=>\s(\n\s+)array\s\(\n/', " => array (\n", var_export(array('ttl' => $ttl, 'data' => serialize($value)), true)) . ';';
+
         return $this->fileWrite($file, $data);
     }
-    
+
     /**
      * Fetch variable from the cache.
      *
@@ -130,30 +118,27 @@ class PHPFile implements StorageInterface
      * @param   string  $key  Cache key
      * @return  mixed
      */
-    
     public function read($key)
     {
         $file = $this->cacheFile($key);
-        
-        if(file_exists($file))
-        {
+
+        if (file_exists($file)) {
             // Cache exists
-            
+
             $data = include $file;
-            
+
             $expire = (int) $data['ttl'];
-            
-            if($expire === 0 || time() < $expire)
-            {
+
+            if ($expire === 0 || time() < $expire) {
                 return unserialize($data['data']);
             }
-                
+
             unlink($file);
         }
-        
+
         return false;
     }
-    
+
     /**
      * Returns TRUE if the cache key exists and FALSE if not.
      * 
@@ -161,23 +146,20 @@ class PHPFile implements StorageInterface
      * @param   string   $key  Cache key
      * @return  boolean
      */
-    
     public function has($key)
     {
         $file = $this->cacheFile($key);
-        
-        if(file_exists($file))
-        {
+
+        if (file_exists($file)) {
             $data = include $file;
             $expire = (int) $data['ttl'];
-            
+
             return $expire === 0 || time() < $expire;
         }
-        
+
         return false;
     }
-    
-    
+
     /**
      * Delete a variable from the cache.
      *
@@ -185,41 +167,35 @@ class PHPFile implements StorageInterface
      * @param   string   $key  Cache key
      * @return  boolean
      */
-    
     public function delete($key)
     {
         $file = $this->cacheFile($file);
-        
-        if(file_exists($file))
-        {
+
+        if (file_exists($file)) {
             return unlink($file);
         }
-        
+
         return false;
     }
-    
+
     /**
      * Clears the user cache.
      *
      * @access  public
      * @return  boolean
      */
-    
     public function clear()
     {
         $pattern = $this->path . '/' . $this->prefix . '*' . $this->extension;
-        
-        foreach(glob($pattern) as $file)
-        {
-            if(!is_dir($file))
-            {
-                if(unlink($file) === false)
-                {
+
+        foreach (glob($pattern) as $file) {
+            if (!is_dir($file)) {
+                if (unlink($file) === false) {
                     return false;
                 }
             }
         }
-        
+
         return true;
     }
 }

@@ -35,6 +35,8 @@ class APC implements StorageInterface
      */
     public function __construct($prefix = '')
     {
+        $this->prefix = $prefix;
+        
         if (function_exists('apc_fetch') === false) {
             throw new RuntimeException(vsprintf("%s(): APC is not available.", array(__METHOD__)));
         }

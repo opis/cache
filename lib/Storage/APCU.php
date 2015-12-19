@@ -35,6 +35,8 @@ class APCU implements StorageInterface
      */
     public function __construct($prefix = '')
     {
+        $this->prefix = $prefix;
+        
         if (function_exists('apcu_fetch') === false) {
             throw new RuntimeException(vsprintf("%s(): APCU is not available.", array(__METHOD__)));
         }

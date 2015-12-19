@@ -47,7 +47,7 @@ class XCache implements StorageInterface
 
         $this->password = $password;
 
-        $this->prefix = '';
+        $this->prefix = $prefix;
 
         if (function_exists('xcache_get') === false) {
             throw new RuntimeException(vsprintf("%s(): XCache is not available.", array(__METHOD__)));

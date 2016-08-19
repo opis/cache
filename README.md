@@ -6,16 +6,11 @@ Opis Cache
 
 Caching library
 ----------------
-**Opis Cache** is a caching library, with support for multiple backend storages, that provides developers an API which allows
-them to deal with cached content in a standardised way, no matter where that content is stored. Also, the **Opis Cache**'s
-simple and effective architecture, ensures that support for new backend storages can be easily achieved
-by simply implementing an interface.
+**Opis Cache** library that helps you work with cached content. 
+Cached content can be stored and retrieved by using one of the provided cache driver.
+You can create your own cache driver by simply implementing an interface.
 
-The currently supported storages are: APC, APCU, File, Memory, Memcache, Memcached, MongoDB, Proxy, WinCache, XCache, ZendCache and ZendMemory.
-
-##### Important!
-
-You can install additional storage adapters, for SQL databases and Redis, by using the optional [Opis Storages](https://github.com/opis/storages) package.
+The currently supported cache drivers are: File, Memory, and PHPFile.
 
 ### License
 
@@ -23,7 +18,7 @@ You can install additional storage adapters, for SQL databases and Redis, by usi
 
 ### Requirements
 
-* PHP 5.3.* or higher
+* PHP 7.0.* or higher
 
 ### Installation
 
@@ -32,21 +27,21 @@ This library is available on [Packagist](https://packagist.org/packages/opis/cac
 ```json
 {
     "require": {
-        "opis/cache": "^3.1.1"
+        "opis/cache": "4.0.x-dev"
     }
 }
 ```
 
 If you are unable to use [Composer](http://getcomposer.org) you can download the
-[tar.gz](https://github.com/opis/cache/archive/3.1.1.tar.gz) or the [zip](https://github.com/opis/cache/archive/3.1.1.zip)
+[tar.gz](https://github.com/opis/cache/archive/master.tar.gz) or the [zip](https://github.com/opis/cache/archive/master.zip)
 archive file, extract the content of the archive and include de `autoload.php` file into your project. 
 
 ```php
 
-require_once 'path/to/cache-3.1.1/autoload.php';
+require_once 'path/to/cache-master/autoload.php';
 
 ```
 
 ### Documentation
 
-Examples and documentation can be found at http://opis.io/cache .
+Examples and documentation(outdated) can be found [here](http://opis.io/cache).

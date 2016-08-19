@@ -1,5 +1,11 @@
 CHANGELOG
 -----------
+### v4.0.x-dev
+
+* Removed support for PHP 5.x
+* Added support for PHP 7.0
+* This is a complete redesign of the library.
+
 ### v3.1.1, 2015.12.19
 
 * Fixed CS

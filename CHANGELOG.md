@@ -5,6 +5,7 @@ CHANGELOG
 * Removed support for PHP 5.x
 * Added support for PHP 7.0
 * This is a complete redesign of the library.
+* Source files were moved from `lib` to `src`
 
 ### v3.1.1, 2015.12.19
 

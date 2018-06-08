@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2013-2016 The Opis Project
+ * Copyright 2013-2018 The Opis Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,10 @@
 
 namespace Opis\Cache\Drivers;
 
-use Opis\Cache\CacheInterface;
-use Opis\Cache\LoadTrait;
 use RuntimeException;
+use Opis\Cache\{
+    CacheInterface, LoadTrait
+};
 
 class File implements CacheInterface
 {
@@ -37,9 +38,9 @@ class File implements CacheInterface
     /**
      * Constructor.
      *
-     * @param   string  $path       Path
-     * @param   string  $prefix     (optional) Cache key prefix
-     * @param   string  $extension  (optional) File extension
+     * @param   string $path Path
+     * @param   string $prefix (optional) Cache key prefix
+     * @param   string $extension (optional) File extension
      */
     public function __construct($path, $prefix = '', $extension = 'cache')
     {
@@ -56,11 +57,11 @@ class File implements CacheInterface
         }
 
         if (!is_dir($this->path) && !@mkdir($this->path, 0775, true)) {
-            throw new RuntimeException(vsprintf("Cache directory ('%s') does not exist.", array($this->path)));
+            throw new RuntimeException(vsprintf("Cache directory ('%s') does not exist.", [$this->path]));
         }
 
         if (!is_writable($this->path) || !is_readable($this->path)) {
-            throw new RuntimeException(vsprintf("Cache directory ('%s') is not writable or readable.", array($this->path)));
+            throw new RuntimeException(vsprintf("Cache directory ('%s') is not writable or readable.", [$this->path]));
         }
     }
 
@@ -75,7 +76,7 @@ class File implements CacheInterface
         if (file_exists($this->cacheFile($key))) {
             // Cache exists
             $handle = fopen($this->cacheFile($key), 'r');
-            $expire = (int) trim(fgets($handle));
+            $expire = (int)trim(fgets($handle));
 
             if ($expire === 0 || time() < $expire) {
                 $cache = '';
@@ -103,7 +104,7 @@ class File implements CacheInterface
      */
     public function write(string $key, $data, int $ttl = 0): bool
     {
-        $ttl = ((int) $ttl <= 0) ? 0 : ((int) $ttl + time());
+        $ttl = ((int)$ttl <= 0) ? 0 : ((int)$ttl + time());
         $file = $this->cacheFile($key);
         $data = "{$ttl}\n" . serialize($data);
 
@@ -139,7 +140,7 @@ class File implements CacheInterface
 
         if (file_exists($file)) {
             $handle = fopen($file, 'r');
-            $expire = (int) trim(fgets($handle));
+            $expire = (int)trim(fgets($handle));
             fclose($handle);
             return $expire === 0 || time() < $expire;
         }
@@ -170,7 +171,7 @@ class File implements CacheInterface
     /**
      * Returns the path to the cache file.
      *
-     * @param   string  $key  Cache key
+     * @param   string $key Cache key
      *
      * @return  string
      */
@@ -182,8 +183,8 @@ class File implements CacheInterface
     /**
      * Write on file
      *
-     * @param   string  $file  File path
-     * @param   string  $data  Content
+     * @param   string $file File path
+     * @param   string $data Content
      *
      * @return  bool
      */

@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2013-2016 The Opis Project
+ * Copyright 2013-2018 The Opis Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,9 @@
 
 namespace Opis\Cache\Drivers;
 
-use Opis\Cache\CacheInterface;
-use Opis\Cache\LoadTrait;
+use Opis\Cache\{
+    CacheInterface, LoadTrait
+};
 
 class Memory implements CacheInterface
 {
@@ -36,7 +37,7 @@ class Memory implements CacheInterface
     public function read(string $key)
     {
         if (isset($this->cache[$key])) {
-            $expire = (int) $this->cache[$key]['ttl'];
+            $expire = (int)$this->cache[$key]['ttl'];
 
             if ($expire === 0 || time() < $expire) {
                 return $this->cache[$key]['data'];
@@ -59,8 +60,8 @@ class Memory implements CacheInterface
      */
     public function write(string $key, $data, int $ttl = 0): bool
     {
-        $ttl = ((int) $ttl <= 0) ? 0 : ((int) $ttl + time());
-        $this->cache[$key] = array('data' => $data, 'ttl' => $ttl);
+        $ttl = ((int)$ttl <= 0) ? 0 : ((int)$ttl + time());
+        $this->cache[$key] = ['data' => $data, 'ttl' => $ttl];
 
         return true;
     }
@@ -90,7 +91,7 @@ class Memory implements CacheInterface
     public function has(string $key): bool
     {
         if (isset($this->cache[$key])) {
-            $expire = (int) $this->cache[$key]['ttl'];
+            $expire = (int)$this->cache[$key]['ttl'];
             return $expire === 0 || time() < $expire;
         }
 
@@ -108,6 +109,4 @@ class Memory implements CacheInterface
 
         return true;
     }
-
-
 }

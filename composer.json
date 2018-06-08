@@ -18,11 +18,17 @@
         "php": "^7.0"
     },
     "require-dev": {
-        "psr/simple-cache": "^1.0"
+        "psr/simple-cache": "^1.0",
+        "phpunit/phpunit": "^6.5"
     },
     "autoload": {
         "psr-4": {
             "Opis\\Cache\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Opis\\Cache\\Test\\": "tests/"
         }
     },
     "config": {

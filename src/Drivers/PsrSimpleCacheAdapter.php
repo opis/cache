@@ -43,7 +43,7 @@ class PsrSimpleCacheAdapter implements CacheInterface
      */
     public function read(string $key)
     {
-        return $this->cache->get($key);
+        return $this->cache->get($key, false);
     }
 
     /**

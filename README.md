@@ -1,7 +1,8 @@
 Opis Cache
 ==============
-[![Latest Stable Version](https://poser.pugx.org/opis/cache/version.png)](https://packagist.org/packages/opis/cache)
-[![Latest Unstable Version](https://poser.pugx.org/opis/cache/v/unstable.png)](//packagist.org/packages/opis/cache)
+[![Build Status](https://travis-ci.org/opis/cache.png)](https://travis-ci.org/opis/cache)
+[![Latest Stable Version](https://poser.pugx.org/opis/cache/v/stable.png)](https://packagist.org/packages/opis/cache)
+[![Latest Unstable Version](https://poser.pugx.org/opis/cache/v/unstable.png)](https://packagist.org/packages/opis/cache)
 [![License](https://poser.pugx.org/opis/cache/license.png)](https://packagist.org/packages/opis/cache)
 
 Caching library

@@ -7,7 +7,7 @@ Opis Cache
 
 Caching library
 ----------------
-**Opis Cache** library that helps you work with cached content. 
+**Opis Cache** is library that helps you work with cached content. 
 Cached content can be stored and retrieved by using one of the provided cache driver.
 You can create your own cache driver by simply implementing an interface.
 

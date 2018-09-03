@@ -30,12 +30,19 @@ class PsrSimpleCacheAdapter implements CacheInterface
     protected $cache;
 
     /**
-     * PsrCacheProxy constructor.
      * @param PsrCacheInterface $cache
      */
     public function __construct(PsrCacheInterface $cache)
     {
         $this->cache = $cache;
+    }
+
+    /**
+     * @return PsrCacheInterface
+     */
+    public function psrInstance(): PsrCacheInterface
+    {
+        return $this->cache;
     }
 
     /**

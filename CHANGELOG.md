@@ -1,6 +1,6 @@
 CHANGELOG
 -----------
-### v4.0.x-dev
+### v4.0.0, 2018.09.04
 
 * Removed support for PHP 5.x
 * Added support for PHP 7.0

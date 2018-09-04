@@ -13,36 +13,38 @@ You can create your own cache driver by simply implementing an interface.
 
 The currently supported cache drivers are: File, Memory, and PHPFile.
 
+### Documentation
+
+The full documentation for this library can be found [here][documentation].
+
 ### License
 
-**Opis Cache** is licensed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0). 
+**Opis Cache** is licensed under the [Apache License, Version 2.0][apache_license].
 
 ### Requirements
 
-* PHP 7.0.* or higher
+* PHP ^7.0
 
-### Installation
+## Installation
 
-This library is available on [Packagist](https://packagist.org/packages/opis/cache) and can be installed using [Composer](http://getcomposer.org).
+**Opis Cache** is available on [Packagist] and it can be installed from a 
+command line interface by using [Composer]. 
+
+```bash
+composer require opis/cache
+```
+
+Or you could directly reference it into your `composer.json` file as a dependency
 
 ```json
 {
     "require": {
-        "opis/cache": "4.0.x-dev"
+        "opis/cache": "^4.0"
     }
 }
 ```
 
-If you are unable to use [Composer](http://getcomposer.org) you can download the
-[tar.gz](https://github.com/opis/cache/archive/master.tar.gz) or the [zip](https://github.com/opis/cache/archive/master.zip)
-archive file, extract the content of the archive and include de `autoload.php` file into your project. 
-
-```php
-
-require_once 'path/to/cache-master/autoload.php';
-
-```
-
-### Documentation
-
-Examples and documentation(outdated) can be found [here](http://opis.io/cache).
+[documentation]: https://opis.io/cache
+[apache_license]: https://www.apache.org/licenses/LICENSE-2.0 "Apache License"
+[Packagist]: https://packagist.org/packages/opis/cache "Packagist"
+[Composer]: https://getcomposer.org "Composer"

@@ -73,7 +73,7 @@ class File implements CacheInterface
      */
     public function read(string $key)
     {
-        if (file_exists($this->cacheFile($key))) {
+        if (is_file($this->cacheFile($key))) {
             // Cache exists
             $handle = fopen($this->cacheFile($key), 'r');
             $expire = (int)trim(fgets($handle));
@@ -121,7 +121,7 @@ class File implements CacheInterface
     {
         $file = $this->cacheFile($key);
 
-        if (file_exists($file)) {
+        if (is_file($file)) {
             return unlink($file);
         }
 
@@ -138,7 +138,7 @@ class File implements CacheInterface
     {
         $file = $this->cacheFile($key);
 
-        if (file_exists($file)) {
+        if (is_file($file)) {
             $handle = fopen($file, 'r');
             $expire = (int)trim(fgets($handle));
             fclose($handle);

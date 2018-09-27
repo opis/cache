@@ -75,7 +75,7 @@ class PHPFile implements CacheInterface
     {
         $file = $this->cacheFile($key);
 
-        if (file_exists($file)) {
+        if (is_file($file)) {
             // Cache exists
             $data = include $file;
             $expire = (int)$data['ttl'];
@@ -116,7 +116,7 @@ class PHPFile implements CacheInterface
     {
         $file = $this->cacheFile($key);
 
-        if (file_exists($file)) {
+        if (is_file($file)) {
             return unlink($file);
         }
 
@@ -133,7 +133,7 @@ class PHPFile implements CacheInterface
     {
         $file = $this->cacheFile($key);
 
-        if (file_exists($file)) {
+        if (is_file($file)) {
             $data = include $file;
             $expire = (int)$data['ttl'];
             return $expire === 0 || time() < $expire;

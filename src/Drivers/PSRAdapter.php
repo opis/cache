@@ -18,29 +18,29 @@
 namespace Opis\Cache\Drivers;
 
 use Opis\Cache\{
-    CacheInterface, LoadTrait
+    CacheDriver, Traits\Load
 };
-use Psr\SimpleCache\CacheInterface as PsrCacheInterface;
+use Psr\SimpleCache\CacheInterface as PsrCache;
 
-class PsrSimpleCacheAdapter implements CacheInterface
+class PSRAdapter implements CacheDriver
 {
-    use LoadTrait;
+    use Load;
 
-    /** @var PsrCacheInterface */
+    /** @var PsrCache */
     protected $cache;
 
     /**
-     * @param PsrCacheInterface $cache
+     * @param PsrCache $cache
      */
-    public function __construct(PsrCacheInterface $cache)
+    public function __construct(PsrCache $cache)
     {
         $this->cache = $cache;
     }
 
     /**
-     * @return PsrCacheInterface
+     * @return PsrCache
      */
-    public function psrInstance(): PsrCacheInterface
+    public function psrInstance(): PsrCache
     {
         return $this->cache;
     }

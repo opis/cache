@@ -18,12 +18,12 @@
 namespace Opis\Cache\Drivers;
 
 use Opis\Cache\{
-    CacheInterface, LoadTrait
+    CacheDriver, Traits\Load
 };
 
-class Memory implements CacheInterface
+class Memory implements CacheDriver
 {
-    use LoadTrait;
+    use Load;
 
     /** @var array */
     protected $cache = [];

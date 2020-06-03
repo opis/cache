@@ -15,9 +15,11 @@
  * limitations under the License.
  * ============================================================================ */
 
-namespace Opis\Cache;
+namespace Opis\Cache\Traits;
 
-trait LoadTrait
+use Opis\Cache\CacheDriver;
+
+trait Load
 {
     /**
      * @param string $key
@@ -27,7 +29,7 @@ trait LoadTrait
      */
     public function load(string $key, callable $loader, int $ttl = 0)
     {
-        /** @var CacheInterface $cache */
+        /** @var CacheDriver $cache */
         $cache = $this;
 
         if (!$cache->has($key)) {

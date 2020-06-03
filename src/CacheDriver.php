@@ -17,7 +17,7 @@
 
 namespace Opis\Cache;
 
-interface CacheInterface
+interface CacheDriver
 {
     /**
      * Read from cache

@@ -17,19 +17,18 @@
 
 namespace Opis\Cache\Test;
 
-use Opis\Cache\CacheInterface;
+use Opis\Cache\CacheDriver;
 use Opis\Cache\Drivers\Memory;
 use PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase
 {
-    /** @var CacheInterface */
-    protected $cache;
+    private CacheDriver $cache;
 
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->cache = new Memory();
     }

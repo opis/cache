@@ -19,12 +19,12 @@ namespace Opis\Cache\Drivers;
 
 use RuntimeException;
 use Opis\Cache\{
-    CacheInterface, LoadTrait
+    CacheDriver, Traits\Load
 };
 
-class File implements CacheInterface
+class File implements CacheDriver
 {
-    use LoadTrait;
+    use Load;
 
     /** @var    string */
     protected $path;

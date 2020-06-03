@@ -1,6 +1,6 @@
 Opis Cache
 ==============
-[![Build Status](https://travis-ci.org/opis/cache.png)](https://travis-ci.org/opis/cache)
+[![Tests](https://github.com/opis/cache/workflows/Tests/badge.svg)](https://github.com/opis/cache/actions)
 [![Latest Stable Version](https://poser.pugx.org/opis/cache/v/stable.png)](https://packagist.org/packages/opis/cache)
 [![Latest Unstable Version](https://poser.pugx.org/opis/cache/v/unstable.png)](https://packagist.org/packages/opis/cache)
 [![License](https://poser.pugx.org/opis/cache/license.png)](https://packagist.org/packages/opis/cache)
@@ -13,15 +13,15 @@ You can create your own cache driver by simply implementing an interface.
 
 The currently supported cache drivers are: File, Memory, and PHPFile.
 
-### Documentation
+## Documentation
 
 The full documentation for this library can be found [here][documentation].
 
-### License
+## License
 
-**Opis Cache** is licensed under the [Apache License, Version 2.0][apache_license].
+**Opis Cache** is licensed under the [Apache License, Version 2.0][license].
 
-### Requirements
+## Requirements
 
 * PHP ^7.0
 
@@ -39,12 +39,12 @@ Or you could directly reference it into your `composer.json` file as a dependenc
 ```json
 {
     "require": {
-        "opis/cache": "^4.0"
+        "opis/cache": "^2020"
     }
 }
 ```
 
 [documentation]: https://opis.io/cache
-[apache_license]: https://www.apache.org/licenses/LICENSE-2.0 "Apache License"
+[license]: https://www.apache.org/licenses/LICENSE-2.0 "Apache License"
 [Packagist]: https://packagist.org/packages/opis/cache "Packagist"
 [Composer]: https://getcomposer.org "Composer"

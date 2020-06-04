@@ -1,6 +1,6 @@
 <?php
 /* ===========================================================================
- * Copyright 2018 Zindex Software
+ * Copyright 2018-2020 Zindex Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,14 +26,11 @@ class PHPFile implements CacheDriver
 {
     use Load;
 
-    /** @var    string */
-    protected $path;
+    protected string $path;
 
-    /** @var    string */
-    protected $prefix;
+    protected string $prefix;
 
-    /** @var    string */
-    protected $extension;
+    protected string $extension;
 
     /**
      * Constructor.
@@ -42,7 +39,7 @@ class PHPFile implements CacheDriver
      * @param    string $prefix (optional) Cache key prefix
      * @param   string $extension (optional) File extension
      */
-    public function __construct($path, $prefix = '', $extension = 'php')
+    public function __construct(string $path, string $prefix = '', string $extension = 'php')
     {
         $this->path = rtrim($path, '/');
         $this->prefix = trim($prefix, '.');

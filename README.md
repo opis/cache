@@ -23,7 +23,7 @@ The full documentation for this library can be found [here][documentation].
 
 ## Requirements
 
-* PHP ^7.0
+* PHP ^7.4|^8.0
 
 ## Installation
 
